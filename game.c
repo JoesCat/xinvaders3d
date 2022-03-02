@@ -1032,7 +1032,7 @@ static void Draw_vector_font ( int *s[], int x, int y, unsigned int color )
 
 /*================================================================*/
 
-void Add_obj_2_world ( OBJECT *obj )
+static void Add_obj_2_world ( OBJECT *obj )
 {
    int i;
 
@@ -1045,17 +1045,17 @@ void Add_obj_2_world ( OBJECT *obj )
    }
 }
 
-void Clear_obj_list ( void )
+static void Clear_obj_list ( void )
 {
    gv->gobjcount = 0;
 }
 
-void Sort_obj_list ( void )
+static void Sort_obj_list ( void )
 {
    qsort ( gv->gobjs, gv->gobjcount, sizeof ( OBJECT * ), Z_compare );
 }
 
-int Z_compare ( const void *obj0, const void *obj1 )
+static int Z_compare ( const void *obj0, const void *obj1 )
 {
    OBJECT *o0, *o1;
 
@@ -1070,7 +1070,7 @@ int Z_compare ( const void *obj0, const void *obj1 )
       return 0;
 }
 
-void Draw_obj_list ( MAT r )
+static void Draw_obj_list ( MAT r )
 {
    int i;
    OBJECT *obj;
@@ -1088,7 +1088,7 @@ void Draw_obj_list ( MAT r )
 }
 /*================================================================*/
 
-float Dist_pt_2_line ( VEC p, VEC l0, VEC l1 )
+static float Dist_pt_2_line ( VEC p, VEC l0, VEC l1 )
 {
    VEC l0_p;
    VEC l0_l1;

@@ -562,7 +562,7 @@ void Aliens_update ( void )
 
 /*================================================================*/
 
-void Add_bomb ( OBJECT *alien )
+static void Add_bomb ( OBJECT *alien )
 {
    int    i;
    OBJECT *abomb;
