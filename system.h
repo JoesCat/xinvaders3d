@@ -1,5 +1,5 @@
 /*------------------------------------------------------------------
-  system.h: 
+  system.h:
 
     XINVADERS 3D - 3d Shoot'em up
     Copyright (C) 2000 Don Llopis
@@ -24,7 +24,7 @@
 
 /*------------------------------------------------------------------
  *
- * Misc Functions & Graphics primitives: 
+ * Misc Functions & Graphics primitives:
  * LINUX/X11 : main-x11.c
  *
 ------------------------------------------------------------------*/
@@ -48,22 +48,30 @@ extern void Draw_text         ( char *, int, int, unsigned int );
 ------------------------------------------------------------------*/
 
 #ifdef GAME_LINUX_X11
-#include <sys/time.h>
-#include <sys/times.h>
-#include <sys/types.h>
+
+    #include <sys/time.h>
+    #include <sys/times.h>
+    #include <sys/types.h>
     #define TIME_T  time_t
     #define TIMEVAL struct timeval
     #define CLOCK_T clock_t
-#endif
 
-#ifdef GAME_WIN32
-#include <winsock.h>
+#elif GAME_DOS_DJGPP
+
+    #include <sys/time.h>
+    #include <sys/times.h>
+    #include <sys/types.h>
     #define TIME_T  time_t
     #define TIMEVAL struct timeval
     #define CLOCK_T clock_t
-#endif
 
-#ifdef GAME_DOS_DJGPP
+#elif GAME_WIN32
+
+    #include <winsock.h>
+    #define TIME_T  time_t
+    #define TIMEVAL struct timeval
+    #define CLOCK_T clock_t
+
 #endif
 
 typedef struct TIMERSTRUCT TIMER;
