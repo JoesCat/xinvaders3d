@@ -60,7 +60,7 @@ unsigned int  window_width, window_height,
 
 /*------------------------------------------------------------------
  * main
- *  
+ *
  *
 ------------------------------------------------------------------*/
 int main ( int argc, char **argv )
@@ -86,7 +86,7 @@ int main ( int argc, char **argv )
    Game_main ();
 
    Graphics_shutdown ();
-   
+
    /* print contact information */
    i = 0;
    while ( game_about_info[i] )
@@ -94,7 +94,7 @@ int main ( int argc, char **argv )
       fprintf ( stderr, "%s\n", game_about_info[i] );
       i++;
    }
-         
+
    return 0;
 }
 
@@ -114,7 +114,7 @@ int Graphics_init ( unsigned int win_width, unsigned int win_height )
    screen_num = DefaultScreen ( display );
    screen_ptr = DefaultScreenOfDisplay ( display );
 
-   win = XCreateSimpleWindow ( display, 
+   win = XCreateSimpleWindow ( display,
          RootWindow ( display, screen_num ),
          0, 0,
          window_width,
@@ -124,10 +124,10 @@ int Graphics_init ( unsigned int win_width, unsigned int win_height )
          WhitePixel ( display, screen_num ) );
 
    XSelectInput ( display, win, ExposureMask | KeyPressMask |
-         KeyReleaseMask | ButtonPressMask | 
+         KeyReleaseMask | ButtonPressMask |
          ButtonReleaseMask | EnterWindowMask |
          LeaveWindowMask );
-   
+
    XStringListToTextProperty ( &window_name, 1, &wname );
    XSetWMProperties ( display, win, &wname, NULL,
          NULL, 0, NULL, NULL, NULL );
@@ -137,7 +137,7 @@ int Graphics_init ( unsigned int win_width, unsigned int win_height )
    color_gc = XCreateGC ( display, win, gc_valuemask, &gc_values );
    text_gc  = XCreateGC ( display, win, gc_valuemask, &gc_values );
 
-   
+
    /* load default font */
    font_info = XLoadQueryFont ( display, font_name );
    if ( !font_info )
@@ -160,7 +160,7 @@ int Graphics_init ( unsigned int win_width, unsigned int win_height )
       color_data[i][1] = 1024 * j;
       color_data[i][0] = color_data[i][2] = 0;
    }
-   
+
    /* blue */
    for ( i=128, j=0; i<192; i++, j++ )
    {
@@ -179,7 +179,7 @@ int Graphics_init ( unsigned int win_width, unsigned int win_height )
    color_data[192][1] = 63 * 1024;
    color_data[192][2] = 32 * 1024;
 
-   
+
    for ( i=0; i<MAX_COLORS; i++ )
    {
       color_info.red   = color_data[i][0];
@@ -193,11 +193,11 @@ int Graphics_init ( unsigned int win_width, unsigned int win_height )
       color_table[i] = color_info.pixel;
    }
 
-   XSetForeground ( display, black_gc, 
+   XSetForeground ( display, black_gc,
          color_table[BLACK] );
-   XSetForeground ( display, color_gc, 
+   XSetForeground ( display, color_gc,
          color_table[GREEN] );
-   XSetForeground ( display, text_gc, 
+   XSetForeground ( display, text_gc,
          color_table[GREEN] );
 
    double_buffer = XCreatePixmap ( display, win,
@@ -207,7 +207,7 @@ int Graphics_init ( unsigned int win_width, unsigned int win_height )
    XFillRectangle ( display,
          double_buffer,
          black_gc,
-         0, 0, 
+         0, 0,
          window_width,
          window_height );
 
@@ -263,7 +263,7 @@ int Update_display ( void )
    XFillRectangle ( display, double_buffer, black_gc,
          0, 0, window_width, window_height );
 
-   
+
    return TRUE;
 }
 
@@ -273,7 +273,7 @@ int Handle_events ( void )
 {
    XEvent event;
    KeySym keysym;
-   
+
    XSync ( display, False );
    while ( XPending ( display ) )
    {
@@ -341,14 +341,14 @@ int Handle_events ( void )
 
                case XK_Escape:
                   /* quit! */
-                  return FALSE; 
+                  return FALSE;
                   break;
 
                default:
                   break;
             }
             break;
-         
+
          case KeyRelease:
             keysym = XLookupKeysym ( &(event.xkey), 0 );
             switch ( keysym )
@@ -394,7 +394,7 @@ int Handle_events ( void )
 
 void Draw_line ( int x0, int y0, int x1, int y1, unsigned int color )
 {
-   XSetForeground ( display, color_gc, 
+   XSetForeground ( display, color_gc,
          color_table[color] );
 
    XDrawLine ( display, double_buffer, color_gc,
@@ -405,7 +405,7 @@ void Draw_line ( int x0, int y0, int x1, int y1, unsigned int color )
 
 void Draw_point ( int x0, int y0, unsigned int color )
 {
-   XSetForeground ( display, color_gc, 
+   XSetForeground ( display, color_gc,
          color_table[color] );
 
    XFillRectangle ( display, double_buffer, color_gc,
@@ -416,13 +416,13 @@ void Draw_point ( int x0, int y0, unsigned int color )
 
 void Draw_text ( char *message, int x0, int y0, unsigned int color )
 {
-   XSetForeground ( display, text_gc, 
+   XSetForeground ( display, text_gc,
          color_table[color] );
 
    XDrawString ( display, double_buffer, text_gc,
                  x0, y0,
                  message, strlen ( message ) );
-} 
+}
 
 /*================================================================*/
 
@@ -459,14 +459,22 @@ double Timer_sec ( TIMER *t )
 long Timer_msec ( TIMER *t )
 {
    long msec;
-  
+
    if ( gettimeofday ( &(t->t1), NULL ) < 0 ) return -1;
 
    msec = ((t->t1.tv_sec-t->t0.tv_sec)*1000L)+
       ((t->t1.tv_usec-t->t0.tv_usec)/1000L);
 
-   t->t0.tv_sec = t->t1.tv_sec;
-   t->t0.tv_usec = t->t1.tv_usec;
+   if ( msec > 0) {
+      /* we need to update right away for slow computers, but for
+       * really fast computers we need to accumilate time before
+       * we can update these values. Seconds followed loosely. */
+      t->t0.tv_usec += msec*1000;
+      if ( t->t0.tv_usec >= 1000000 ) {
+         t->t0.tv_usec -= 1000000;
+         t->t0.tv_sec = t->t1.tv_sec;
+      }
+   }
 
    return msec;
 }
