@@ -23,7 +23,7 @@
 
 /*------------------------------------------------------------------
  * Stars
- *  
+ *
  *
 ------------------------------------------------------------------*/
 
@@ -47,27 +47,15 @@ VEC star_thrust[4] = {{ 0.0f, 0.0f, 50.0f, 1.0f },
 
 void Stars_init ( void )
 {
-   int i, j, k, l, m;
+   int i, m;
    for ( i=0; i<MAX_STARS; i++ )
    {
-      m = rand () % 4;
-      j = rand () % 800;
-      k = rand () % 800;
-      l = rand () % 1000;
       Vector_copy ( star_start, stars[i].pos );
 
-      stars[i].pos[XPOS] = (float)j;
-      stars[i].pos[YPOS] = (float)k;
+      stars[i].pos[XPOS] = (float)((rand () % 1600) - 800);
+      stars[i].pos[YPOS] = (float)((rand () % 1600) - 800);
 
-      if ( (i % 3) == 0 )
-      {
-         stars[i].pos[XPOS] *= -1.0f;
-         if ( (i%2) == 0 )
-         {
-            stars[i].pos[YPOS] *= -1.0f;
-         }
-      }
-      
+      m = rand () % 4;
       stars[i].thrust = m;
       stars[i].color = WHITE - (m*15);
    }
@@ -97,7 +85,7 @@ void Stars_draw ( MAT r )
 
 /*------------------------------------------------------------------
  * Explosions
- *  
+ *
  *
 ------------------------------------------------------------------*/
 
@@ -112,7 +100,7 @@ enum explosions_enum
    EXPLOSION_COLOR_INC   = 15
 };
 
-struct EXPLOSIONSTRUCT 
+struct EXPLOSIONSTRUCT
 {
    VEC  pos[MAX_PARTICLES];
    int  thrust[MAX_PARTICLES];
@@ -140,13 +128,13 @@ VEC pthrust[8] = { {-2.0f, 0.0f, 0.0f, 1.0f},
 
 VEC shard[3] = { {-5.0f, 0.0f, 0.0f, 1.0f},
                     { 0.0f, 5.0f, 0.0f, 1.0f},
-                    { 5.0f, -5.0f, 0.0f, 1.0f}}; 
+                    { 5.0f, -5.0f, 0.0f, 1.0f}};
 
 
 void Explosions_clear ( void )
 {
    int i, j;
-   
+
    ecur = 0;
    ecount = 0;
    pcur = 0;
@@ -184,7 +172,7 @@ void Explosions_add ( OBJECT *obj )
    explosions[ecur].thrust[1] = pcur+1;
    explosions[ecur].thrust[2] = pcur+2;
    explosions[ecur].thrust[3] = pcur+3;
-   
+
    ecur++;
    pcur += 4;
    ecount++;
@@ -231,7 +219,7 @@ void Explosions_draw ( MAT r )
             explosions[i].pos[j][XPOS] += pthrust[k][XPOS] * gv->fadjust;
             explosions[i].pos[j][YPOS] += pthrust[k][YPOS] * gv->fadjust;
             explosions[i].pos[j][ZPOS] += pthrust[k][ZPOS] * gv->fadjust;
-   
+
             Matrix_vec_mult ( r, explosions[i].pos[j], tmp[0] );
             Matrix_copy ( r, tmp_mat );
             Matrix_set_trans ( tmp_mat, tmp[0] );
@@ -249,7 +237,7 @@ void Explosions_draw ( MAT r )
 
 /*------------------------------------------------------------------
  * Jump-gate
- *  
+ *
  *
 ------------------------------------------------------------------*/
 
@@ -280,37 +268,37 @@ static VEC jgvert[32] =
    {-0.0f, 10.0f, -10.0f, 1.0f},
    {10.0f, 0.0f, -10.0f, 1.0f},
    {0.0f, -10.0f, 10.0f, 1.0f},
-   
+
    {-30.0f, 0.0f, 30.0f, 1.0f},
    {0.0f, 30.0f, -30.0f, 1.0f},
    {30.0f, 0.0f, -30.0f, 1.0f},
    {0.0f, -30.0f, 30.0f, 1.0f},
-  
+
    {-50.0f, 0.0f, 50.0f, 1.0f},
    {0.0f, 50.0f, -50.0f, 1.0f},
    {50.0f, 0.0f, -50.0f, 1.0f},
    {0.0f, -50.0f, 50.0f, 1.0f},
-   
+
    {-70.0f, 0.0f, 70.0f, 1.0f},
    {0.0f, 70.0f, -70.0f, 1.0f},
    {70.0f, 0.0f, -70.0f, 1.0f},
    {0.0f, -70.0f, 70.0f, 1.0f},
-   
+
    {-10.0f, 0.0f, -10.0f, 1.0f},
    {0.0f, 10.0f, 10.0f, 1.0f},
    {10.0f, 0.0f, 10.0f, 1.0f},
    {0.0f, -10.0f, -10.0f, 1.0f},
-   
+
    {-30.0f, 0.0f, -30.0f, 1.0f},
    {0.0f, 30.0f, 30.0f, 1.0f},
    {30.0f, 0.0f, 30.0f, 1.0f},
    {0.0f, -30.0f, -30.0f, 1.0f},
-  
+
    {-50.0f, 0.0f, -50.0f, 1.0f},
    {0.0f, 50.0f, 50.0f, 1.0f},
    {50.0f, 0.0f, 50.0f, 1.0f},
    {0.0f, -50.0f, -50.0f, 1.0f},
-   
+
    {-70.0f, 0.0f, -70.0f, 1.0f},
    {0.0f, 70.0f, 70.0f, 1.0f},
    {70.0f, 0.0f, 70.0f, 1.0f},
@@ -332,7 +320,7 @@ void Jumpgate_init ( void )
    jgcur   = 0;
    jcount  = 0;
 }
-   
+
 void Jumpgate_open ( VEC pos, int dir )
 {
    if ( jcount > MAX_JUMPGATES-1 ) return;
@@ -385,9 +373,9 @@ void Jumpgate_animate ( MAT r )
          Matrix_set_trans ( tmp_mat, tmp[0] );
 
          f0 = ( jgates[i].frame + 1 ) * 4;
-         Matrix_vec_multn ( tmp_mat, 
+         Matrix_vec_multn ( tmp_mat,
                &jgvert[jgates[i].dir], tmp, f0 );
-         Camera_project_points ( tmp, p, f0 ); 
+         Camera_project_points ( tmp, p, f0 );
          for ( j=0; j<((f0*2)-4); j+=8 )
          {
             Draw_line ( p[0+j], p[1+j], p[2+j], p[3+j], GREEN );
@@ -401,12 +389,12 @@ void Jumpgate_animate ( MAT r )
 
 /*------------------------------------------------------------------
  * One-up!!!
- *  
+ *
  *
 ------------------------------------------------------------------*/
 
 enum oneup_enum
-{ 
+{
    ONEUP_LIFE       = 2000,
    ONEUP_BLEND_TIME = 200
 };
@@ -423,11 +411,11 @@ struct ONEUPSTRUCT
 static VEC one_up_vert[10] =
 {
    {-40.0f, 20.0f, 0.0f, 1.0f} ,  /* 1 */
-   {-40.0f, -20.0f, 0.0f, 1.0f }, 
+   {-40.0f, -20.0f, 0.0f, 1.0f },
    {-20.0f, 20.0f, 0.0f, 1.0f  }, /* U */
    {-20.0f, -20.0f, 0.0f, 1.0f },
    { 10.0f, -20.0f, 0.0f, 1.0f },
-   { 10.0f, 20.0f, 0.0f, 1.0f  }, 
+   { 10.0f, 20.0f, 0.0f, 1.0f  },
    { 20.0f, 20.0f, 0.0f, 1.0f  }, /* P */
    { 20.0f, -20.0f, 0.0f, 1.0f },
    { 60.0f, 0.0f, 0.0f, 1.0f },
