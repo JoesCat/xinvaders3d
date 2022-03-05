@@ -627,29 +627,18 @@ void Object_update_zone ( OBJECT *obj )
 
 static void Draw_vector_font ( int *s[], int x, int y, unsigned int color )
 {
-   int i, j, X, segments;
-   int *letter;
+   int *letter, segments, x1, y1, x2, y2;
 
-   i = 0;
-   X = x;
-   letter = s[0];
-
-   do
-   {
-      /* first integer of pointer array is always # of line segments */
-      segments = *letter;
-      letter++;
-      for ( j=0; j<segments; j++ )
-      {
-         Draw_line ( (*(letter+(j*4)))+X, (*(letter+(j*4)+1))+y,
-                     (*(letter+(j*4)+2))+X, (*(letter+(j*4)+3))+y, color );
+   /* first integer of pointer array is always # of line segments */
+   while ( (letter=*s++) ) {
+      segments=*letter++;
+      while ( --segments>=0 ) {
+         x1 = (*letter++)+x; y1 = (*letter++)+y;
+         x2 = (*letter++)+x; y2 = (*letter++)+y;
+         Draw_line( x1, y1, x2, y2, color );
       }
-
-      i++;
-      letter = s[i];
-      X += 30;
+      x += 30;
    }
-   while ( letter );
 }
 
 /*================================================================*/
