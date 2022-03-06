@@ -1,181 +1,133 @@
-XInvaders 3D v1.3.6
--=-=-=-=-=-=-=-=-=-
-XInvaders 3D is a vector-graphics Space Invaders clone
-for the X Window System.
+# XInvaders 3D
 
-================================================================
+XInvaders 3D is a vector-graphics Space Invaders clone for the X Window System.
 
-Objective:
--=-=-=-=-=-
-Clear all the aliens in each level. The UFO yields bonus
-points if hit. A new life will be added every 7500 points.
+You are a lone star fighter facing endless waves of space aliens.
+Your sole objective is to shoot down as many aliens as you can.
+All objects are represented with 3D vector graphics, allowing the
+aliens to grow in size as they move closer to you.
 
-Game-over: either if the player has lost all its lives
-or if the alien formation reaches the player position.
+![](xinvaders3d.jpg)
 
-================================================================
 
-Point System:
--=-=-=-=-=-=-
+## Objective:
+
+Clear all the aliens in each level. The UFO yields bonus points if hit. A new life will be added every 7500 points.
+
+Game-over: either if the player has lost all its lives or if the alien formation reaches the player position.
+
+
+## Point System:
 
 From bottom to top:
-Row 0 aliens yield 10  pts
-Row 1 aliens yield 50  pts
-Row 2 aliens yield 100 pts
-Row 3 aliens yield 150 pts
-Row 4 aliens yield 200 pts
+```
+ - Row 0 aliens yield 10  pts
+ - Row 1 aliens yield 50  pts
+ - Row 2 aliens yield 100 pts
+ - Row 3 aliens yield 150 pts
+ - Row 4 aliens yield 200 pts
 
-UFO yields 500 pts
+ - UFO yields 500 pts
+```
 
-================================================================
 
-Keys:
--=-=-
+##Keys:
 
-SPACE         : Fire Missile
-Left Arrow    : move left
-Right Arrow   : move right
-Up Arrow      : move up
-Down Arrow    : move down
-q             : Reset game
-f             : Show frame-rate
-p             : Pause game
-ESC           : Terminate Program
+```
+ - SPACE         : Fire Missile
+ - Left Arrow    : move left
+ - Right Arrow   : move right
+ - Up Arrow      : move up
+ - Down Arrow    : move down
+ - q             : Reset game
+ - f             : Show frame-rate
+ - p             : Pause game
+ - ESC           : Terminate Program
+```
 
-================================================================
 
-How to compile and play the game:
--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+## Original Author and Original Website (year2000):
 
-1. Requirements: gcc and Xlib
-2. Compile the game, type: make
-3. Run the game, type: ./xinv3d
-
-note:
-You may have to edit the Makefile depending on where
-your headers and libraries are. For other systems please
-see the README.xxx for that system.
-
-================================================================
-
-Contact Author:
--=-=-=-=-=-=-=-
 Don Llopis
 del23@users.sourceforge.net
 http://xinvaders3d.sourceforge.net
 
-================================================================
+### Original Greetings (from Don Llopis, year2000):
 
-Greetings:
--=-=-=-=-=-
-Greets to following people whose games helped inspire
-this project:
+Greets to the following people whose games helped inspire this project:
 
-Bill Kendrick
-who wrote ICBM3d http://www.newbreedsoftware.com
+ - Bill Kendrick: who wrote ICBM3d http://www.newbreedsoftware.com
+ - Yuusuke Hashimoto: who wrote XSoldier http://www.surfline.ne.jp/hachi/xsoldier.html
+ - James Eibisch: who wrote a Space Invaders clone in quick-basic http://www.revolver.demon.co.uk/coding/index.html
 
-Yuusuke Hashimoto
-who wrote XSoldier http://www.surfline.ne.jp/hachi/xsoldier.html
+Thanks to the following people who contributed to the development of XInvaders3d:
 
-James Eibisch
-who wrote a Space Invaders clone in quick-basic
-http://www.revolver.demon.co.uk/coding/index.html
+ - Thomas Boutell for contributing the Windows Port of XInvaders, and misc code fixes.
+ - Sam Bushell for the ZONE_HEIGHT bug fix.
+ - Andreas Jeitler for creating the RPM package.
+ - Chris Butler for creating the DEB package.
+ - Peter da Silva for the FreeBSD fix.
+ - Bill Kendrick for the Window Manager fix.
 
-Thanks to the following people who contributed to the development
-of XInvaders3d:
 
-Thomas Boutell for contributing the Windows Port of XInvaders, and
-misc code fixes.
+## How To Compile And Play Xinvaders 3D:
 
-Sam Bushell for the ZONE_HEIGHT bug fix.
+There are four different methods you can use.
 
-Andreas Jeitler for creating the RPM package.
+### 1 - Distro Specific Install
 
-Chris Butler for creating the DEB package.
+This is always the recommended method.
+Install Xinvaders from your distro's repositories.
+This will be custom to your distro, and you should be able to find Xinvaders listed in the games menu folder.
 
-Peter da Silva for the FreeBSD fix.
 
-Bill Kendrick for the Window Manager fix.
+### 2 - Original Method
 
-================================================================
+1. Requirements: gcc and Xlib (with include header files)
+2. Rename or copy Makefile.lin to Makefile so that you can run make
+3. Compile the game, type: make
+4. Run the game, type: ./xinv3d
 
-History:
--=-=-=-=-
+Note: You may have to edit the Makefile depending on where your headers and libraries are.
 
-1.3.6:
-      Minor fixes.
-      Changed some game text which had the wrong
-      contact information.
-      Made some more code clean ups.
+Note: This only creates the binary program xinv3d in the same directory
 
-1.3.5:
-      Moved all game text to gtext.h.
-      Removed `goto' in init code.
-      Put a space in ``game over.''
+Note: For other systems please see the README.xxx for that system.
 
-1.32-1.34:
-      Minor fixes.
+### 3 - Release Tag
 
-1.31:
-      Fixed drawing order. Objects were being drawn in reverse.
+For users who do not have autoconf or automake available, there are release tagpoints.
+The first release is [![v1.4.0]](https://github.com/JoesCat/xinvaders3d/releases/tag/1.4.0)
+Download the -dist- file and expand it so that you can run it.
 
-1.3:
-      Many thanks to Thomas Boutell, he has contributed a
-      Windows port of XInvaders 3D. See README.win for more
-      information.
+Installing on Linux
+```sh
+./configure
+make
+make check
+sudo make install
+```
+Note: .configure will stop if you are missing any development include headers.
 
-      XInvaders 3D DOS port finished. XInvaders 3D will now run
-      as a full-screen 640x480x8 DOS game. For windows users it
-      will run in a DOS window just fine. I used DJGPP+Allegro
-      to port it. See README.dos for more information.
+Please install the developer versions of any missing libraries since the include files are also needed for building the program.
 
-      Added Vector-fonts. All text graphics have been
-      replaced with Vector-fonts. Gives the game a
-      cleaner look.
+The default install location is /usr/local/bin/xinv3d and you should also find it in your desktop games menu folder.
 
-      New player blinking routine. Player now cycles
-      through red colors, rather than being drawn
-      each alternate frame, when a new level
-      has been started.
+### 4 - Latest development files
 
-      New special effect: 1-UP indicator. When 7500pts
-      have been reached a new life is indicated by
-      a nice little vector 1-UP floating towards
-      the player.
+For users or developers wanting to run the latest update, you will need to install autoconf and automake tools as well as the developer versions of any missing files and libraries.
+Then, download the latest code.
 
-      New alien-shoot missile routine. Aliens now shoot
-      more.
-
-      New Distance-of-Point-to-Line routine, used for
-      collision detection.
-
-      Added fix for FreeBSD systems, thanks to Peter da Silva.
-
-      Fixed ZONE_HEIGHT bug in game.c, which was generating
-      bad pointers, thanks to Sam Bushell.
-
-      Cleaned up code, for portability reasons, thanks to
-      Thomas Boutell for his help.
-
-      Left-Shift key is no longer being used.
-
-1.2:
-      Cleaned up some more code.
-
-      Adjusted formation movement.
-
-      Changed missile color to yellow, suggested by Mattia Engdeg.
-
-      Fixed some warnings which the pedantic flag generates,
-      thanks to Jarmo Pussinen for pointing them out.
-
-1.1:
-      Fixed incompatible pointer warnings.
-
-      Fixed window manager bug which Bill Kendrick pointed out.
-
-      Windows were opening at an odd width and height under
-      the Enlightenment Window manager.
-
-1.0:
-      Initial release.
+Next, you need to create the ./configure script if you do not have it yet
+```sh
+autoreconf -i  (or use 'autoreconf --install --force' for more modern setups)
+automake --foreign -Wall
+```
+After you have created ./configure, you can run ./configure --help to show other options, or
+for a default build and install on Linux, run:
+```sh
+./configure
+make
+sudo make install
+```
+The default install location is /usr/local/bin/xinv3d and you should also find it in your desktop games menu folder.

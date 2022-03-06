@@ -303,7 +303,7 @@ void Game_gameover ( void )
 
    Camera_transform ( cam_mat, up, from, at );
    Stars_draw ( cam_mat );
-   Draw_vector_font ( GAME, 200, 200, RED );
+   Draw_vector_font ( GAME, 165, 200, RED );
    Draw_vector_font ( OVER, 315, 200, RED );
    Game_overlay ();
    SW_UPDATE;

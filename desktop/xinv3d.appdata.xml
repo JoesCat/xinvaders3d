@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2022 Joe Da Silva <digital@joescat.com> -->
+<application>
+  <id type="desktop">xinv3d.desktop</id>
+  <license>CC0-1.0</license>
+  <name>XInvaders 3D</name>
+  <description>
+    <p xml:lang="C">
+    XInvaders 3D is a 3D vector-based space-invaders clone for the X Window System.</p>
+  </description>
+  <url type="homepage">https://github.com/JoesCat/xinvaders3d</url>
+</application>

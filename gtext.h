@@ -10,14 +10,13 @@
 char *game_about_info[] =
 {
    "Thanks for playing XInvaders 3D.",
-   "XInvaders 3D v1.3.6, Copyright 2000 Don Llopis",
+   "XInvaders 3D v1.4.0, Copyright 2000 Don Llopis",
    "XInvaders 3D comes with ABSOLUTELY NO WARRANTY.",
    "This is free software, and you are welcome to",
    "redistribute it under certain conditions. See",
    "file named COPYING for more information.",
    "Latest version of the game can be found at:",
-   "http://xinvaders3d.sourceforge.net",
-   "Author can be reached at: del23@users.sourceforge.net",
+   "https://github.com/JoesCat/xinvaders3d/releases",
    NULL
 };
 

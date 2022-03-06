@@ -1,0 +1,75 @@
+xinv3d (1.4.0)
+  * This started as a resurection of a Debian orphaned program
+    'xinv3d' brought up to date and made buildable with current
+    PCs. See URL: https://github.com/JoesCat/xinv3d
+    Thanks to Debian's Ricardo Mones for suggesting rethreading
+    from an earlier release. This version starts from earliest
+    release found == version 1.31 based on an ibiblio tarball.
+    NOTE: No CVS file system found therefore started fresh 1.31.
+  * Imported code HP-UX (1.31) fixes, 2000feb07, unknown author.
+  * Imported fixes and improvements, the moving of game text to
+    gtext.h, and a detailed history added to README all done by
+    Chris Butler for Debian's xinv3d ver{1.3.6-1...1.3.6-6}.
+    NOTE: This import is smaller than a complete 1.3.6-6 clone.
+  * Import xinv3d.6 manual written by Chris Butler for Debian's
+    xinv3d 1.3.6-1 (but may be used by others).
+  * Speed-up vector font drawing by changing multiplications to
+    a few value increments. This benefits lower-powered CPUs.
+  * Bug-fix for lower-right quadrant void of stars.
+  * Timer-math bugfix that makes game seem to run very slowly on
+    very fast computer even though game is running at thousands
+    of frames per second.
+  * Updated xinv3d to be built using autoreconf -i and automake.
+    Added freedesktop and new icons (resolves Debian #738066).
+  * Replaced old make. Bumped version number from 1.3x to 1.4.0
+ -- Joe Da Silva <digital@joescat.com>  2022 Mar 05
+
+xinv3d (1.3.1)
+  * Fixed drawing order. Objects were being drawn in reverse.
+ -- Don Llopis <del23@users.sourceforge.net> 2000 Feb 07
+
+xinv3d (1.3)
+  * Many thanks to Thomas Boutell, he has contributed a
+    Windows port of XInvaders 3D. See README.win for more
+    information.
+  * XInvaders 3D DOS port finished. XInvaders 3D will now run
+    as a full-screen 640x480x8 DOS game. For windows users it
+    will run in a DOS window just fine. I used DJGPP+Allegro
+    to port it. See README.dos for more information.
+  * Added Vector-fonts. All text graphics have been replaced
+    with Vector-fonts. Gives the game a cleaner look.
+  * New player blinking routine. Player now cycles through
+    red colors, rather than being drawn each alternate frame,
+    when a new level has been started.
+  * New special effect: 1-UP indicator. When 7500pts have
+    been reached a new life is indicated by a nice little
+    vector 1-UP floating towards the player.
+  * New alien-shoot missile routine. Aliens now shoot more.
+  * New Distance-of-Point-to-Line routine, used for
+    collision detection.
+  * Added fix for FreeBSD systems, thanks to Peter da Silva.
+  * Fixed ZONE_HEIGHT bug in game.c, which was generating bad
+    pointers, thanks to Sam Bushell.
+  * Cleaned up code, for portability reasons, thanks to
+    Thomas Boutell for his help.
+  * Left-Shift key is no longer being used.
+ -- Don Llopis <dllopi01@fiu.edu>  2000 Feb 05
+
+xinv3d (1.2)
+  * Cleaned up some more code.
+  * Adjusted formation movement.
+  * Changed missile color to yellow, suggested by Mattia Engdeg.
+  * Fixed some warnings which the pedantic flag generates,
+    thanks to Jarmo Pussinen for pointing them out.
+ -- Don Llopis <dllopi01@fiu.edu>
+
+xinv3d (1.1)
+  * Fixed incompatible pointer warnings, and an updated README.
+  * Fixed window manager bug which Bill Kendrick pointed out.
+  * Windows were opening at an odd width and height under the
+    Enlightenment Window manager.
+ -- Don Llopis <dllopi01@fiu.edu>  2000 Jan 22
+
+xinv3d (1.0)
+  * Initial Release.
+ -- Don Llopis <dllopi01@fiu.edu>  2000 Jan 22 01:40
