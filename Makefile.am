@@ -33,4 +33,9 @@ man_MANS = xinv3d.6
 pkgconfigdir = @pkgconfigdir@
 pkgconfig_DATA = xinv3d.pc
 
-EXTRA_DIST = AUTHORS Changelog main-dos.c main-w.c Makefile.dos Makefile.lin README.md README.dos README.win xinvaders3d.jpg xinv3d.6 ${noinst_HEADERS}
+EXTRA_DIST = AUTHORS Changelog main-dos.c main-w.c	\
+	Makefile.dos Makefile.lin README.md README.dos	\
+	README.win xinvaders3d.jpg xinv3d.6		\
+	packaging/xinv3d.spec.in packaging/xinv3d.spec	\
+	${noinst_HEADERS}
+nodist_EXTRA_DATA = .git .github

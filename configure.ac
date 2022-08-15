@@ -6,7 +6,7 @@
 AC_PREREQ(2.61)
 
 m4_define([xinv3d_version], [1.4.0])
-AC_INIT([xinv3d],[xinv3d_version],[digital@joescat.com],
+AC_INIT([xinv3d],[xinv3d_version],[https://github.com/JoesCat/xinvaders3d/issues],
 	[xinv3d],[https://github.com/JoesCat/xinvaders3d])
 AC_CONFIG_SRCDIR([aliens.c])
 AC_CONFIG_MACRO_DIR([m4])
@@ -90,7 +90,7 @@ AC_LANG_POP
 AC_SUBST([WCFLAGS])
 
 #-------------------------------------------
-AC_CONFIG_FILES([Makefile xinv3d.pc desktop/Makefile])
+AC_CONFIG_FILES([Makefile xinv3d.pc desktop/Makefile packaging/xinv3d.spec])
 AC_OUTPUT
 AC_MSG_NOTICE([
 
