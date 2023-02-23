@@ -7,9 +7,9 @@ includedir=@includedir@
 localedir=@localedir@
 mandir=@mandir@
 
-Name: xinv3d
+Name: xinvaders3d
 Description: XInvaders 3D is a 3D Vector Graphics Space Invaders clone for X11
 URL: https://github.com/JoesCat/xinvaders3d
 Libs: -L${libdir}
 Cflags: -I${includedir}
-Version: @XINV3D_VERSION@
+Version: @XINVADERS3D_VERSION@

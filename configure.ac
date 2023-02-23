@@ -5,9 +5,9 @@
 
 AC_PREREQ(2.61)
 
-m4_define([xinv3d_version], [1.4.0])
-AC_INIT([xinv3d],[xinv3d_version],[https://github.com/JoesCat/xinvaders3d/issues],
-	[xinv3d],[https://github.com/JoesCat/xinvaders3d])
+m4_define([xinvaders3d_version], [1.5.0])
+AC_INIT([xinvaders3d],[xinvaders3d_version],[https://github.com/JoesCat/xinvaders3d/issues],
+	[xinvaders3d],[https://github.com/JoesCat/xinvaders3d])
 AC_CONFIG_SRCDIR([aliens.c])
 AC_CONFIG_MACRO_DIR([m4])
 AC_CANONICAL_SYSTEM
@@ -16,7 +16,7 @@ AC_CANONICAL_BUILD
 AM_INIT_AUTOMAKE([foreign -Wall])
 AC_USE_SYSTEM_EXTENSIONS
 AC_DEFINE(MOTIF, HAVE_MOTIF)
-AC_SUBST([XINV3D_VERSION],[xinv3d_version])
+AC_SUBST([XINVADERS3D_VERSION],[xinvaders3d_version])
 AC_CHECK_TOOL([STRIP],[strip],[:])
 AC_PROG_CC
 AC_PROG_RANLIB
@@ -90,7 +90,7 @@ AC_LANG_POP
 AC_SUBST([WCFLAGS])
 
 #-------------------------------------------
-AC_CONFIG_FILES([Makefile xinv3d.pc desktop/Makefile packaging/xinv3d.spec])
+AC_CONFIG_FILES([Makefile xinvaders3d.pc desktop/Makefile packaging/xinvaders3d.spec])
 AC_OUTPUT
 AC_MSG_NOTICE([
 

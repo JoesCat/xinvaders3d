@@ -79,6 +79,7 @@ int main ( int argc, char **argv )
 
    if ( !Game_init ( WIN_WIDTH, WIN_HEIGHT ) )
    {
+      Graphics_shutdown ();
       fprintf ( stderr, "Error: could not initialize game data!\n" );
       exit ( -1 );
    }

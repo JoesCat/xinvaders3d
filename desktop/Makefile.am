@@ -18,18 +18,18 @@
 
 # Where .desktop files go.
 desktopdir = ${datarootdir}/applications
-desktop_DATA = xinv3d.desktop
+desktop_DATA = xinvaders3d.desktop
 
 # Where appdata and metainfo xml files go
 appdatadir = ${datarootdir}/appdata
-appdata_DATA = xinv3d.appdata.xml
+appdata_DATA = xinvaders3d.appdata.xml
 metainfodir = ${datarootdir}/metainfo
-metainfo_DATA = xinv3d.metainfo.xml
+metainfo_DATA = xinvaders3d.metainfo.xml
 
-# Where MIME data goes (Support for .xinv3d data files, for instance).
+# Where MIME data goes (Support for .xinvaders3d data files, for instance).
 mimedir = ${datarootdir}/mime
 mimepackagesdir = ${datarootdir}/mime/packages
-mimepackages_DATA = xinv3d.xml
+mimepackages_DATA = xinvaders3d.xml
 
 #update-mime-database ${mimedir}
 
@@ -40,14 +40,14 @@ hicolor64x64dir = $(HICOLORDIR)/64x64/apps
 hicolor128x128dir = $(HICOLORDIR)/128x128/apps
 hicolor256x256dir = $(HICOLORDIR)/256x256/apps
 
-hicolor32x32_DATA = 32x32/xinv3d.png
-hicolor64x64_DATA = 64x64/xinv3d.png
-hicolor128x128_DATA = 128x128/xinv3d.png
-hicolor256x256_DATA = 256x256/xinv3d.png
+hicolor32x32_DATA = 32x32/xinvaders3d.png
+hicolor64x64_DATA = 64x64/xinvaders3d.png
+hicolor128x128_DATA = 128x128/xinvaders3d.png
+hicolor256x256_DATA = 256x256/xinvaders3d.png
 
 deskpixsdir = ${datarootdir}/pixmaps
-deskpixs_DATA = 32x32/xinv3d.xpm 32x32/xinv3d.png
+deskpixs_DATA = 32x32/xinvaders3d.xpm 32x32/xinvaders3d.png
 
-EXTRA_DIST = xinv3d.desktop xinv3d.appdata.xml xinv3d.metainfo.xml xinv3d.xml \
-	32x32/xinv3d.xpm 32x32/xinv3d.png 64x64/xinv3d.png 128x128/xinv3d.png \
-	256x256/xinv3d.png
+EXTRA_DIST = xinvaders3d.desktop xinvaders3d.appdata.xml xinvaders3d.metainfo.xml xinvaders3d.xml \
+	32x32/xinvaders3d.xpm 32x32/xinvaders3d.png 64x64/xinvaders3d.png 128x128/xinvaders3d.png \
+	256x256/xinvaders3d.png

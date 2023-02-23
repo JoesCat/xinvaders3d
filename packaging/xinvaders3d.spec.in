@@ -1,5 +1,5 @@
-Name:		xinv3d
-Version:	@XINV3D_VERSION@
+Name:		xinvaders3d
+Version:	@XINVADERS3D_VERSION@
 Release:	0
 Summary:	3D space-invaders clone on X Window System.
 License:	GPLv2+

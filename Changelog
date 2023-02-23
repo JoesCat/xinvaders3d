@@ -1,3 +1,7 @@
+xinvaders3d (1.5.0)
+  * Renamed xinv3d to xinvaders3d to avoid package confusion if
+    both programs loaded at same time on the same computer.
+
 xinv3d (1.4.0)
   * This started as a resurection of a Debian orphaned program
     'xinv3d' brought up to date and made buildable with current

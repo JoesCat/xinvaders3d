@@ -20,22 +20,26 @@ SUBDIRS = . desktop
 
 ACLOCAL_AMFLAGS = -I m4 ${ACLOCAL_FLAGS}
 
-bin_PROGRAMS = xinv3d
-xinv3d_CPPFLAGS = ${CFLAGS} ${WCFLAGS}
-xinv3d_LDFLAGS = ${LDFLAGS}
-xinv3d_LDADD = -lX11 -lm
-xinv3d_SOURCES = aliens.c camera.c effects.c game.c object.c mat4x4.c player.c vec4x1.c main-x11.c
+bin_PROGRAMS = xinvaders3d
+xinvaders3d_CPPFLAGS = ${CFLAGS} ${WCFLAGS}
+xinvaders3d_LDFLAGS = ${LDFLAGS}
+xinvaders3d_LDADD = -lX11 -lm
+xinvaders3d_SOURCES = aliens.c camera.c effects.c game.c object.c mat4x4.c player.c vec4x1.c main-x11.c
 noinst_HEADERS = camera.h defines.h externs.h game.h gtext.h mat4x4.h object.h system.h vec4x1.h
-xinv3d.$(OBJEXT): ${noinst_HEADERS}
+xinvaders3d.$(OBJEXT): ${noinst_HEADERS}
 
-man_MANS = xinv3d.6
+man_MANS = xinvaders3d.6
 
 pkgconfigdir = @pkgconfigdir@
-pkgconfig_DATA = xinv3d.pc
+pkgconfig_DATA = xinvaders3d.pc
 
-EXTRA_DIST = AUTHORS Changelog main-dos.c main-w.c	\
-	Makefile.dos Makefile.lin README.md README.dos	\
-	README.win xinvaders3d.jpg xinv3d.6		\
-	packaging/xinv3d.spec.in packaging/xinv3d.spec	\
+EXTRA_DIST = \
+	AUTHORS Changelog main-dos.c main-w.c Makefile.dos Makefile.lin	\
+	README.md README.dos README.win xinvaders3d.jpg xinvaders3d.6	\
+	packaging/xinvaders3d.spec.in packaging/xinvaders3d.spec	\
 	${noinst_HEADERS}
 nodist_EXTRA_DATA = .git .github
+
+strip:
+	$(STRIP) $(builddir)/xinvaders3d
+

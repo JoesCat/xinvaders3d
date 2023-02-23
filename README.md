@@ -86,18 +86,18 @@ This will be custom to your distro, and you should be able to find Xinvaders lis
 1. Requirements: gcc and Xlib (with include header files)
 2. Rename or copy Makefile.lin to Makefile so that you can run make
 3. Compile the game, type: make
-4. Run the game, type: ./xinv3d
+4. Run the game, type: ./xinvaders3d
 
 Note: You may have to edit the Makefile depending on where your headers and libraries are.
 
-Note: This only creates the binary program xinv3d in the same directory
+Note: This only creates the binary program xinvaders3d in the same directory.
 
 Note: For other systems please see the README.xxx for that system.
 
 ### 3 - Release Tag
 
 For users who do not have autoconf or automake available, there are release tagpoints.
-The first release is [![v1.4.0]](https://github.com/JoesCat/xinvaders3d/releases/tag/1.4.0)
+The first release is [![v1.5.0]](https://github.com/JoesCat/xinvaders3d/releases/tag/1.5.0)
 Download the -dist- file and expand it so that you can run it.
 
 Installing on Linux
@@ -111,7 +111,7 @@ Note: .configure will stop if you are missing any development include headers.
 
 Please install the developer versions of any missing libraries since the include files are also needed for building the program.
 
-The default install location is /usr/local/bin/xinv3d and you should also find it in your desktop games menu folder.
+The default install location is /usr/local/bin/xinvaders3d and you should also find it in your desktop games menu folder.
 
 ### 4 - Latest development files
 
@@ -130,4 +130,4 @@ for a default build and install on Linux, run:
 make
 sudo make install
 ```
-The default install location is /usr/local/bin/xinv3d and you should also find it in your desktop games menu folder.
+The default install location is /usr/local/bin/xinvaders3d and you should also find it in your desktop games menu folder.

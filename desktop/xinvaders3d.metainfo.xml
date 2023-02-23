@@ -1,34 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Copyright 2022 Joe Da Silva <digital@joescat.com> -->
+<!-- Copyright 2023 Joe Da Silva <digital@joescat.com> -->
 <component type="desktop">
-  <id>xinv3d</id>
-  <launchable type="desktop-id">xinv3d.desktop</launchable>
+  <id>xinvaders3d</id>
+  <launchable type="desktop-id">xinvaders3d.desktop</launchable>
   <metadata_license>CC0-1.0</metadata_license>
-  <name>XInvaders 3D</name>
+  <name>X Invaders 3D</name>
   <summary>3D space invaders for X</summary>
   <description>
     <p xml:lang="C">
-    XInvaders 3D is a 3D vector-based space-invaders clone for the X Window System.</p>
+    X Invaders 3D is a 3D vector-based space-invaders clone for the X Window System.</p>
     <p xml:lang="C">
     You are a lone star fighter facing endless waves of space aliens.
     Your sole objective is to shoot down as many aliens as you can.
     All objects are represented with 3D vector graphics, allowing the
     aliens to grow in size as they move closer to you.</p>
     <p xml:lang="es">
-    XInvaders 3D es un clon de space-invaders basado en vectores en 3D para el sistema X Window.</p>
+    X Invaders 3D es un clon de space-invaders basado en vectores en 3D para el sistema X Window.</p>
     <p xml:lang="es">
     Eres un piloto que se enfrenta a interminables oleadas de extraterrestres.
     Tienes que disparar a tantos alienígenas como puedas.
     Todos los Aliens están representados en gráficos vectoriales en 3D.</p>
     <p xml:lang="fr">
-    XInvaders 3D est un clone vectoriel d'envahisseurs spatiaux 3D pour le système X Window.</p>
+    X Invaders 3D est un clone vectoriel d'envahisseurs spatiaux 3D pour le système X Window.</p>
     <p xml:lang="fr">
     Vous êtes un combattant solitaire face à des vagues interminables d'extraterrestres.
     Votre seul objectif est d'abattre autant d'extraterrestres que vous le pouvez.
     Tous les objets sont représentés avec des graphiques vectoriels 3D, permettant la
     les extraterrestres grandissent à mesure qu'ils se rapprochent de vous.</p>
     <p xml:lang="pt">
-    XInvaders 3D é um clone de space-invaders baseado em vetor 3D para o X11.</p>
+    X Invaders 3D é um clone de space-invaders baseado em vetor 3D para o X11.</p>
     <p xml:lang="pt">
     Você é um piloto enfrentando ondas intermináveis de alienígenas do espaço.
     Você tem que atirar no maior número de alienígenas que puder.
@@ -43,7 +43,7 @@
   <update_contact>digital@joescat.com</update_contact>
   <content_rating type="oars-1.1"/>
   <releases>
-    <release date="2022-03-05" version="1.4.0"/>
+    <release date="2023-02-23" version="1.5.0"/>
   </releases>
   <project_license>GPL</project_license>
   <developer_name>Don Llopis</developer_name>
