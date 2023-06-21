@@ -57,7 +57,7 @@ enum alien_enum
 
    MAX_COLUMNS              = 8,
    START_LEAD_COLUMN        = 7,
-   FORMATION_STEP           = 3,   /* dist_between_aliens / thurust */
+   FORMATION_STEP           = 3,   /* dist_between_aliens / thrust */
    FORWARD_START            = 21,  /* formation x FORMATION_STEP */
    FORWARD_MAX              = 45,  /* must calc by hand */
    FORWARD_MIN              = 0,
@@ -82,12 +82,12 @@ OBJLIST flist[MAX_FORMATIONS], *af_list;
 OBJLIST abomblist, *abombs;
 
 /* formation speed in msec */
-static int fspeed[9]        = { 1000, 750, 500, 
-                                400, 400, 300, 
-                                200, 150, 100 };
+static int fspeed[9]     = { 1000, 750, 500,
+                             400, 400, 300,
+                             200, 150, 100 };
 
-static VEC fstart_pos    = 
-{ 
+static VEC fstart_pos    =
+{
    FORMATION_MIN_X_POS,
    FORMATION_MIN_Y_POS,
    FORMATION_MAX_Z_POS,
@@ -96,13 +96,13 @@ static VEC fstart_pos    =
 static VEC fstart_dir    = { 0.0f, 0.0f, 1.0f, 1.0f };
 
 static VEC fthrust[3]    = { { -25.0f, 0.0f, 0.0f, 1.0f },
-                                { 25.0f, 0.0f, 0.0f, 1.0f },
-                                { 0.0f, 0.0f, 100.0f, 1.0f } };
+                             { 25.0f, 0.0f, 0.0f, 1.0f },
+                             { 0.0f, 0.0f, 100.0f, 1.0f } };
 
 static VEC abomb_thrust  = { 0.0f, 0.0f, 25.0f, 1.0f };
 static VEC ufo_thrust    = { 5.0f, 0.0f, 0.0f, 1.0f };
 
-static VEC avert1[48] = { 
+static VEC avert1[48] = {
    { -20.0f, 20.0f, 0.0f, 1.0f },      /* A0: body*/
    { 20.0f, 20.0f, 0.0f, 1.0f },
    { 20.0f, 0.0f, 0.0f, 1.0f },
@@ -119,7 +119,7 @@ static VEC avert1[48] = {
    { -15.0, 2.0f, 0.0f, 1.0f },
    { 15.0, 18.0f, 0.0f, 1.0f },
    { 15.0, 2.0f, 0.0f, 1.0f },
-   
+
    { -15.0f, 20.0f, 0.0f, 1.0f },      /* A1: body*/
    { 15.0f, 20.0f, 0.0f, 1.0f },
    { 5.0f, 0.0f, 0.0f, 1.0f },
@@ -136,7 +136,7 @@ static VEC avert1[48] = {
    { -15.0, 0.0f, 0.0f, 1.0f },
    { 20.0, 15.0f, 0.0f, 1.0f },
    { 15.0, 0.0f, 0.0f, 1.0f },
-   
+
    { -5.0f, 20.0f, 0.0f, 1.0f },      /* A2: body*/
    { 5.0f, 20.0f, 0.0f, 1.0f },
    { 20.0f, 0.0f, 0.0f, 1.0f },
@@ -155,7 +155,7 @@ static VEC avert1[48] = {
    { 15.0, 15.0f, 0.0f, 1.0f }
 };
 
-static VEC avert2[48] = { 
+static VEC avert2[48] = {
    { -20.0f, 20.0f, 0.0f, 1.0f },      /*A0: body*/
    { 20.0f, 20.0f, 0.0f, 1.0f },
    { 20.0f, 0.0f, 0.0f, 1.0f },
@@ -172,7 +172,7 @@ static VEC avert2[48] = {
    { -15.0, 7.0f, 0.0f, 1.0f },
    { 10.0, 25.0f, 0.0f, 1.0f },
    { 15.0, 7.0f, 0.0f, 1.0f },
-   
+
    { -15.0f, 20.0f, 0.0f, 1.0f },      /* A1: body*/
    { 15.0f, 20.0f, 0.0f, 1.0f },
    { 5.0f, 0.0f, 0.0f, 1.0f },
@@ -189,7 +189,7 @@ static VEC avert2[48] = {
    { -15.0, 0.0f, 0.0f, 1.0f },
    { 20.0, 15.0f, 0.0f, 1.0f },
    { 15.0, 0.0f, 0.0f, 1.0f },
-   
+
    { -5.0f, 20.0f, 0.0f, 1.0f },      /* A2: body*/
    { 5.0f, 20.0f, 0.0f, 1.0f },
    { 20.0f, 0.0f, 0.0f, 1.0f },
@@ -208,13 +208,13 @@ static VEC avert2[48] = {
    { 15.0, 0.0f, 0.0f, 1.0f }
 };
 
-static VEC abomb_vert[3] = { 
+static VEC abomb_vert[3] = {
    { -10.0f, 0.0f, -10.0f, 1.0f },
    { 0.0f, 0.0f, 10.0f, 1.0f },
    { 10.0f, 0.0f, -10.0f, 1.0f }
 };
 
-static VEC abomb_vert2[3] = { 
+static VEC abomb_vert2[3] = {
    { 0.0f, 10.0f, 0.0f, 1.0f },
    { 0.0f, 0.0f, 10.0f, 1.0f },
    { 0.0f, -10.0f, 0.0f, 1.0f }
@@ -240,9 +240,6 @@ static VEC uvert1[17] = {
    { 15.0f, 5.0f, 0.0f, 1.0f }
 };
 
-
-
-
 static int fmove;         /* FORMATION move sideways timer */
 static int fforward;      /* FORMATION move forward counter */
 static int fforward_max;  /* FORMATION move forward max */
@@ -251,7 +248,7 @@ static int fanim;         /* FORMATION animation counter */
 static int fdir;          /* FORMATION movement direction  */
 static int fscur;         /* FORMATION speed variable */
 static int drop_bomb;     /* drop bomb timer */
-static 
+static
 int fcolumn[MAX_COLUMNS]; /* FORMATION column count */
 
 static int spawn_ufo;     /* spawn ufo timer */
@@ -270,7 +267,7 @@ void Aliens_init ( void )
 
    /* initialize formations */
 
-   /* 
+   /*
     * the formation is a dummy-object used for
     * object-sorting purposes
     */
@@ -280,7 +277,7 @@ void Aliens_init ( void )
    the_formation.zone = ZONE_8;
    gv->formation_zone = ZONE_8;
    gv->alien_count    = MAX_ALIENS;
-   
+
    fmove         = 0;
    fforward      = FORWARD_START;
    fforward_max  = FORWARD_MAX;
@@ -299,26 +296,26 @@ void Aliens_init ( void )
 
    for ( i=0; i<MAX_COLUMNS; i++ )
       fcolumn[i] = 0;
-   
+
    for ( i=0; i<MAX_FORMATIONS; i++ )
    {
       Objlist_clear ( f_ptr );
-      
+
       Vector_copy ( fstart_pos, tmp_pos );
       tmp_pos[YPOS] += (FORMATION_Y_INC * i);
-      
+
       for ( j=0; j<ALIENS_PER_FORMATION; j++ )
       {
          Object_init    ( alien );
          Object_set_pos ( alien, tmp_pos );
          Object_set_dir ( alien, fstart_dir );
-      
+
          alien->zone            = gv->formation_zone;
-         alien->zheight     = i;
+         alien->zheight         = i;
          alien->vpos            = j;
          alien->radius          = ALIEN_RADIUS;
          alien->radius_squared  = ALIEN_RADIUS_SQUARED;
-         
+
          Objlist_add ( f_ptr, alien );
 
          tmp_pos[XPOS] += FORMATION_X_INC;
@@ -328,7 +325,7 @@ void Aliens_init ( void )
 
       f_ptr++;
    }
-   
+
    /* initialize alien bombs */
    for ( i=0; i<MAX_BOMBS; i++ )
    {
@@ -357,9 +354,9 @@ void Aliens_init ( void )
 void Update_fcolumn ( OBJECT *obj )
 {
    int i, j, tmp;
-   
+
    if ( gv->alien_count == 0 ) return;
-   
+
    i = obj->vpos;
    fcolumn[i] -= 1;
 
@@ -401,7 +398,7 @@ void Aliens_update ( void )
 {
    int i, j, fdir_save, chance;
    OBJECT *alien, *abomb, *tmp;
-         
+
    /* move alien bombs */
    drop_bomb += gv->msec;
    abomb = abombs->head;
@@ -409,8 +406,8 @@ void Aliens_update ( void )
    {
       Vector_copy ( abomb->pos, abomb->old_pos );
       abomb->pos[ZPOS] += abomb_thrust[ZPOS] * gv->fadjust;
-      
-      if ( abomb->pos[ZPOS] > 0.0 ) 
+
+      if ( abomb->pos[ZPOS] > 0.0 )
       {
          abomb->active = FALSE;
          tmp = abomb->next;
@@ -430,11 +427,12 @@ void Aliens_update ( void )
       fmove += gv->msec;
       if ( fmove > fspeed[fscur] )
       {
-         fmove -= fspeed[fscur];
-         fforward++; 
+         while ( fmove > fspeed[fscur] )
+            fmove -= fspeed[fscur];
+         fforward++;
          fanim ^= ANIMATION_TOGGLE;
          fdir_save = fdir;
-         
+
          /* is it time to move the formation forward?? */
          if ( fforward == fforward_max )
          {
@@ -442,7 +440,7 @@ void Aliens_update ( void )
             gv->formation_zone--;
             the_formation.zone--;
             Vector_addd ( the_formation.pos, fthrust[FORWARD] );
-            
+
             /* choose new lead column */
             if ( fdir == LEFT )
             {
@@ -469,9 +467,9 @@ void Aliens_update ( void )
                fdir_save = LEFT;
             }
             fleadcol = i;
-            fdir = FORWARD; 
+            fdir = FORWARD;
          }
-         
+
          for ( i=0; i<MAX_FORMATIONS; i++ )
          {
             alien = (af_list+i)->head;
@@ -482,7 +480,6 @@ void Aliens_update ( void )
                alien = alien->next;
             }
          }
-         
          fdir = fdir_save;
       }
    }
@@ -519,7 +516,7 @@ void Aliens_update ( void )
       chance = rand() % DROP_BOMB_CHANCE_1;
       if ( chance < DROP_BOMB_CHANCE_2 )
       {
-         /* pick formation infront of player */
+         /* pick formation in front of player */
          i = pm->zheight;
          if ( (i > -1) && (i<ZONE_HEIGHT_MAX) )
          {
@@ -538,8 +535,8 @@ void Aliens_update ( void )
                Add_bomb ( alien );
             }
          }
-       
-        /* pick a random formation */ 
+
+        /* pick a random formation */
          i = rand () % MAX_FORMATIONS;
          alien = (af_list+i)->head;
          if ( alien )
@@ -557,7 +554,6 @@ void Aliens_update ( void )
          }
       }
    }
-
 }
 
 /*================================================================*/
@@ -592,7 +588,6 @@ void Aliens_draw ( OBJECT *obj, MAT r )
 
    for ( i=0; i<MAX_FORMATIONS; i++ )
    {
-
       if ( i == MAX_FORMATIONS-1 )
          fmodel = 2;
       else if ( i > 1 )
@@ -620,22 +615,22 @@ void Aliens_draw ( OBJECT *obj, MAT r )
          Draw_line ( p[2], p[3], p[4], p[5], GREEN );
          Draw_line ( p[4], p[5], p[6], p[7], GREEN );
          Draw_line ( p[6], p[7], p[0], p[1], GREEN );
-      
-        /* left leg */ 
+
+        /* left leg */
          Draw_line ( p[8], p[9], p[10], p[11], GREEN );
          Draw_line ( p[10], p[11], p[12], p[13], GREEN );
          Draw_line ( p[12], p[13], p[8], p[9], GREEN );
          Draw_line ( p[10], p[11], p[14], p[15], GREEN );
          Draw_line ( p[14], p[15], p[12], p[13], GREEN );
-       
-        /* right leg */ 
+
+        /* right leg */
          Draw_line ( p[8], p[9], p[16], p[17], GREEN );
          Draw_line ( p[16], p[17], p[18], p[19], GREEN );
          Draw_line ( p[18], p[19], p[8], p[9], GREEN );
          Draw_line ( p[16], p[17], p[20], p[21], GREEN );
          Draw_line ( p[20], p[21], p[18], p[19], GREEN );
-        
-        /* left eye */ 
+
+        /* left eye */
          Draw_line ( p[22], p[23], p[24], p[25], RED );
          Draw_line ( p[24], p[25], p[26], p[27], RED );
          Draw_line ( p[26], p[27], p[22], p[23], RED );
@@ -649,7 +644,6 @@ void Aliens_draw ( OBJECT *obj, MAT r )
       }
    }
 }
-
 
 void Alien_missile_draw ( OBJECT *obj, MAT r )
 {
@@ -666,7 +660,7 @@ void Alien_missile_draw ( OBJECT *obj, MAT r )
    Draw_line ( p[0], p[1], p[2], p[3], YELLOW );
    Draw_line ( p[2], p[3], p[4], p[5], YELLOW );
    Draw_line ( p[4], p[5], p[0], p[1], YELLOW );
-   
+
    Matrix_vec_multn ( tmp_mat, abomb_vert2, tmp, 3 );
    Camera_project_points ( tmp, p, 3 );
    Draw_line ( p[0], p[1], p[2], p[3], YELLOW );
@@ -705,7 +699,6 @@ void Ufo_draw ( OBJECT *obj, MAT r )
       ucolor++;
       if ( ucolor == 4 )
          ucolor = 0;
-
    }
    color = RED - ( ucolor * 15 );
 
