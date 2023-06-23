@@ -62,6 +62,8 @@ struct GAMEVARSSTRUCT
    long pbonus;    /* player bonus counter */
    int  plives;    /* player's current # of lives */
    int  pblinking; /* player invunerable */
+   int  hi_score_c[20];
+   int  pscore_c[20];
 };
 
 /* game.c */

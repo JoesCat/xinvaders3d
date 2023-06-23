@@ -75,6 +75,7 @@
 extern void Game_main ( void );
 
 /* initialization functions */
+extern void Game_scores    ( long );
 extern int  Game_init      ( float, float );
 extern void Game_init_vars ( int );
 extern void Game_init_keys ( void );

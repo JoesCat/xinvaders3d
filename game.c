@@ -27,6 +27,10 @@
 #define SW_UNPAUSE gv->sw_t = gv->sw_save
 #define SW_RESET   gv->sw_t = gv->sw_save = 0
 
+static VEC cam_up = { 0.0f, 1.0f, 0.0f, 1.0f };
+static VEC cam_from = { 0.0f, 0.0f, 100.0f, 1.0f };
+static VEC cam_at = { 0.0f, 0.0f, 0.0f, 1.0f };
+
 static void  Add_obj_2_world ( OBJECT * );
 static void  Clear_obj_list ( void );
 static void  Sort_obj_list ( void );
@@ -47,6 +51,42 @@ TIMER    gtimer, *gt;
 
 static long
 score_table[ZONE_HEIGHT_MAX] = { 10L, 50L, 100L, 150L, 200L };
+
+/*================================================================*/
+
+void Game_scores ( long new_score )
+{
+   int        i;
+   char       buffer[256], tmp_num[2];
+
+   if ( new_score > gv->hi_score ) {
+      gv->hi_score = new_score;
+      /* convert hi-score into a vector-font */
+      sprintf ( buffer, "%ld", new_score );
+      tmp_num[0] = '0';
+      tmp_num[1] = '\0';
+      for ( i=0; buffer[i]; i++ )
+      {
+         tmp_num[0] = buffer[i];
+         gv->hi_score_c[i] = NUMBER[atoi(tmp_num)];
+      }
+      gv->hi_score_c[i] = NULL;
+   }
+
+   if ( new_score > gv->pscore ) {
+      gv->pscore = new_score;
+      /* convert hi-score into a vector-font */
+      sprintf ( buffer, "%ld", new_score );
+      tmp_num[0] = '0';
+      tmp_num[1] = '\0';
+      for ( i=0; buffer[i]; i++ )
+      {
+         tmp_num[0] = buffer[i];
+         gv->pscore_c[i] = NUMBER[atoi(tmp_num)];
+      }
+      gv->pscore_c[i] = NULL;
+   }
+}
 
 /*================================================================*/
 
@@ -102,12 +142,15 @@ void Game_init_vars ( int init_type )
       case INITGAME:
          gv->rfps         = REFERENCE_FRAMERATE;
          gv->display_fps  = FALSE;
-         gv->hi_score     = HISCORE;
+         gv->pscore       = 0;
+         gv->hi_score     = -1;
+         Game_scores ( HISCORE );
 
       case NEWGAME:
          gv->paused       = FALSE;
          gv->gameover     = FALSE;
-         gv->pscore       = 0;
+         gv->pscore       = -1;
+         Game_scores ( 0 );
          gv->pbonus       = 0;
          gv->plives       = PLAYER_LIVES_START;
 
@@ -162,29 +205,14 @@ void Game_menu ( void )
 {
    static int blink = 0;
    static int color = 0;
-   int        i, *tmp_score[20];
-   char       buffer[256], tmp_num[2];
+   int        i;
+   MAT        cam_mat;
 
-   VEC up = { 0.0f, 1.0f, 0.0f, 1.0f };
-   VEC from = { 0.0f, 0.0f, 100.0f, 1.0f };
-   VEC at = { 0.0f, 0.0f, 0.0f, 1.0f };
-   MAT cam_mat;
-
-   /* convert hi-score into a vector-font */
-   sprintf ( buffer, "%ld", gv->hi_score );
-   tmp_num[0] = '0';
-   tmp_num[1] = '\0';
-   for ( i=0; buffer[i]; i++ )
-   {
-      tmp_num[0] = buffer[i];
-      tmp_score[i] = NUMBER[atoi(tmp_num)];
-   }
-   tmp_score[strlen(buffer)] = NULL;
-   Draw_vector_font ( HI_SCORE, 120, 15, GREEN );
-   Draw_vector_font ( tmp_score, 360, 15, GREEN );
-
-   Camera_transform ( cam_mat, up, from, at );
+   Camera_transform ( cam_mat, cam_up, cam_from, cam_at );
    Stars_draw ( cam_mat );
+
+   Draw_vector_font ( HI_SCORE, 120, 15, GREEN );
+   Draw_vector_font ( gv->hi_score_c, 360, 15, GREEN );
 
    blink += gv->msec;
    if ( blink > 250 )
@@ -216,12 +244,9 @@ void Game_ready ( void )
    static int color = 0;
    int i;
 
-   VEC up = { 0.0f, 1.0f, 0.0f, 1.0f };
-   VEC from = { 0.0f, 0.0f, 100.0f, 1.0f };
-   VEC at = { 0.0f, 0.0f, 0.0f, 1.0f };
    MAT cam_mat;
 
-   Camera_transform ( cam_mat, up, from, at );
+   Camera_transform ( cam_mat, cam_up, cam_from, cam_at );
    Stars_draw ( cam_mat );
 
    blink += gv->msec;
@@ -271,12 +296,9 @@ void Game_paused_toggle ( void )
 
 void Game_paused ( void )
 {
-   VEC up = { 0.0f, 1.0f, 0.0f, 1.0f };
-   VEC from = { 0.0f, 0.0f, 100.0f, 1.0f };
-   VEC at = { 0.0f, 0.0f, 0.0f, 1.0f };
    MAT cam_mat;
 
-   Camera_transform ( cam_mat, up, from, at );
+   Camera_transform ( cam_mat, cam_up, cam_from, cam_at );
    Stars_draw ( cam_mat );
    Draw_vector_font ( PAUSED, 230, 200, RED );
 
@@ -296,12 +318,9 @@ void Game_reset ( void )
 
 void Game_gameover ( void )
 {
-   VEC up = { 0.0f, 1.0f, 0.0f, 1.0f };
-   VEC from = { 0.0f, 0.0f, 100.0f, 1.0f };
-   VEC at = { 0.0f, 0.0f, 0.0f, 1.0f };
    MAT cam_mat;
 
-   Camera_transform ( cam_mat, up, from, at );
+   Camera_transform ( cam_mat, cam_up, cam_from, cam_at );
    Stars_draw ( cam_mat );
    Draw_vector_font ( GAME, 165, 200, RED );
    Draw_vector_font ( OVER, 315, 200, RED );
@@ -322,8 +341,11 @@ void Game_gameover ( void )
 void Game_overlay ( void )
 {
    char buffer[256], tmp_num[2];
-   int  i, x, *tmp_score[20];
+   int  i, x;
    int  life[6] = { 0, 450, 25, 450, 12, 425 };
+
+   Draw_vector_font ( SCORE, 150, 14, GREEN );
+   Draw_vector_font ( gv->pscore_c, 330, 15, GREEN );
 
    if ( gv->display_fps )
    {
@@ -337,19 +359,6 @@ void Game_overlay ( void )
 
       Draw_text ( buffer, 0, 475, RED );
    }
-
-   /* convert score into a vector-font */
-   sprintf ( buffer, "%ld", gv->pscore );
-   tmp_num[0] = '0';
-   tmp_num[1] = '\0';
-   for ( i=0; buffer[i]; i++ )
-   {
-      tmp_num[0] = buffer[i];
-      tmp_score[i] = NUMBER[atoi(tmp_num)];
-   }
-   tmp_score[strlen(buffer)] = NULL;
-   Draw_vector_font ( SCORE, 150, 14, GREEN );
-   Draw_vector_font ( tmp_score, 330, 15, GREEN );
 
    if ( (gv->plives-1) > 0 )
    {
@@ -431,7 +440,7 @@ void Game_run ( void )
                   Update_fcolumn ( alien );
 
                   /* update player score & alien count */
-                  gv->pscore += score_table[pm->zheight];
+                  Game_scores ( gv->pscore + score_table[pm->zheight] );
                   gv->pbonus += score_table[pm->zheight];
                   if ( gv->pbonus > PLAYER_LIFE_BONUS-1 )
                   {
@@ -466,7 +475,7 @@ void Game_run ( void )
                Explosions_add ( ufo );
 
                /* update player score */
-               gv->pscore += UFO_BONUS;
+               Game_scores ( gv->pscore + UFO_BONUS );
                gv->pbonus += UFO_BONUS;
                if ( gv->pbonus > PLAYER_LIFE_BONUS-1 )
                {
@@ -598,9 +607,6 @@ void Game_run ( void )
 
       if ( gv->gameover )
       {
-         if ( gv->pscore > gv->hi_score )
-            gv->hi_score = gv->pscore;
-
          SW_RESET;
          Game_actionfn = Game_gameover;
       }
