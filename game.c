@@ -21,6 +21,7 @@
 ------------------------------------------------------------------*/
 #include "game.h"
 #include "gtext.h"
+#include <unistd.h>
 
 #define SW_UPDATE  gv->sw_t += gv->msec
 #define SW_PAUSE   gv->sw_save = gv->sw_t
@@ -103,6 +104,16 @@ void Game_main ( void )
       (*Game_actionfn)();
 
       Update_display ();
+
+      /* let game sleep for about 10msec */
+      if ( gv->fpsfast )
+      {
+         gv->fpsavg = ( gv->fpsavg + gv->fps ) / 2;
+         if ( gv->fpsavg > 100 )
+            gv->fpsfast--;
+      }
+      else
+         usleep(10000);
    }
 }
 
@@ -142,6 +153,8 @@ void Game_init_vars ( int init_type )
       case INITGAME:
          gv->rfps         = REFERENCE_FRAMERATE;
          gv->display_fps  = FALSE;
+         gv->fpsavg       = -1000000;
+         gv->fpsfast      = 1000;
          gv->pscore       = 0;
          gv->hi_score     = -1;
          Game_scores ( HISCORE );
@@ -340,7 +353,7 @@ void Game_gameover ( void )
 
 void Game_overlay ( void )
 {
-   char buffer[256], tmp_num[2];
+   char buffer[256];
    int  i, x;
    int  life[6] = { 0, 450, 25, 450, 12, 425 };
 
@@ -625,8 +638,8 @@ void Game_run ( void )
 
 void Object_update_zone ( OBJECT *obj )
 {
-   obj->zone    = (int) floor ( (double)obj->pos[ZPOS]/-ZONE_WIDTH  );
-   obj->zheight = (int) floor ( (double)obj->pos[YPOS]/ZONE_HEIGHT );
+   obj->zone    = lrint ( floor ( (double)(obj->pos[ZPOS]/-ZONE_WIDTH) ) );
+   obj->zheight = lrint ( floor ( (double)(obj->pos[YPOS]/ZONE_HEIGHT) ) );
 }
 
 /*================================================================*/

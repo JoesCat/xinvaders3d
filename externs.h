@@ -1,5 +1,5 @@
 /*------------------------------------------------------------------
-  externs.h: Global Game Variables 
+  externs.h: Global Game Variables
 
     XINVADERS 3D - 3d Shoot'em up
     Copyright (C) 2000 Don Llopis
@@ -27,17 +27,19 @@ struct GAMEVARSSTRUCT
    /* obj pointers for rendering */
    OBJECT *gobjs[MAX_OBJECTS];
    int    gobjcount;
-   
+
    double fps;     /* frames per second */
    double ftime;   /* frame-time in milliseconds as double */
    double fadjust; /* frame-time adjust = rfps / ftime     */
    long   msec;    /* frame-time in milliseconds as int    */
    long   fcount;  /* frames rendered */
    double rfps;    /* reference frames per second */
-   
+   double fpsavg;  /* just an approx running fps average   */
+   int    fpsfast; /* count-down, we consider fast if zero */
+
    long sw_t;      /* stop-watch current # of seconds */
    long sw_save;   /* stop-watch pause */
-   
+
    int key_QUIT;
    int key_UP;
    int key_DOWN;
@@ -49,7 +51,7 @@ struct GAMEVARSSTRUCT
    int formation_zone;
    int ufo_zone;
    int alien_count;
-   
+
    /* flags */
    int display_fps;
    int paused;
@@ -62,8 +64,8 @@ struct GAMEVARSSTRUCT
    long pbonus;    /* player bonus counter */
    int  plives;    /* player's current # of lives */
    int  pblinking; /* player invunerable */
-   int  hi_score_c[20];
-   int  pscore_c[20];
+   int  *hi_score_c[20];
+   int  *pscore_c[20];
 };
 
 /* game.c */
