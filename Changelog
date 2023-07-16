@@ -1,6 +1,16 @@
+xinvaders3d (1.6.0)
+  * Thanks to jamesbond3142 for fixing a segfault seen in 64bit
+    and also for adding lrint (as per information in issue #1).
+  * usleep () added to reduce CPU energy crunching to ~ 100fps.
+  * Improve FPS by updating hi_score and pscore during scoring.
+  * Added an alien pause during the "Get Ready!!" screen pause.
+  * Updated manual to include Don in authors, thanks to others.
+ -- Joe Da Silva <digital@joescat.com>  2023 July 16
+
 xinvaders3d (1.5.0)
   * Renamed xinv3d to xinvaders3d to avoid package confusion if
     both programs loaded at same time on the same computer.
+ -- Joe Da Silva <digital@joescat.com>  2023 Feb 23
 
 xinv3d (1.4.0)
   * This started as a resurection of a Debian orphaned program
