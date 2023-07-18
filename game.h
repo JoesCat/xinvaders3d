@@ -75,7 +75,6 @@
 extern void Game_main ( void );
 
 /* initialization functions */
-extern void Game_scores    ( long );
 extern int  Game_init      ( float, float );
 extern void Game_init_vars ( int );
 extern void Game_init_keys ( void );
@@ -101,13 +100,17 @@ extern void Object_update_zone ( OBJECT *obj );
  * Player's Functions  : player.c
  *
 ------------------------------------------------------------------*/
-extern void Player_init    ( void );
-extern void Player_blink   ( OBJECT *, MAT );
-extern void Player_draw    ( OBJECT *, MAT );
-extern void Player_update  ( OBJECT * );
+extern void Player_init    ( int );
+extern void Player_blink1  ( OBJECT *, MAT, MAT );
+extern void Player_blink2  ( OBJECT *, MAT, MAT );
+extern void Player_draw1   ( OBJECT *, MAT, MAT );
+extern void Player_draw2   ( OBJECT *, MAT, MAT );
+extern void Player_update1 ( OBJECT * );
+extern void Player_update2 ( OBJECT * );
 
-extern void Player_missile_update  ( OBJECT * );
-extern void Player_missile_draw    ( OBJECT *, MAT );
+extern void Player_missile_update ( OBJECT * );
+extern void Player_missile_draw1  ( OBJECT *, MAT, MAT );
+extern void Player_missile_draw2  ( OBJECT *, MAT, MAT );
 
 /*------------------------------------------------------------------
  *
@@ -117,10 +120,10 @@ extern void Player_missile_draw    ( OBJECT *, MAT );
 extern void Aliens_init        ( void );
 extern void Aliens_update      ( void );
 extern void Update_fcolumn     ( OBJECT * );
-extern void Aliens_draw        ( OBJECT *, MAT );
-extern void Alien_missile_draw ( OBJECT *, MAT );
+extern void Aliens_draw        ( OBJECT *, MAT, MAT );
+extern void Alien_missile_draw ( OBJECT *, MAT, MAT );
 extern void Ufo_spawn          ( void );
-extern void Ufo_draw           ( OBJECT *, MAT );
+extern void Ufo_draw           ( OBJECT *, MAT, MAT );
 
 /*------------------------------------------------------------------
  *
@@ -129,23 +132,23 @@ extern void Ufo_draw           ( OBJECT *, MAT );
 ------------------------------------------------------------------*/
 /* stars */
 extern void Stars_init ( void );
-extern void Stars_draw ( MAT );
+extern void Stars_draw ( MAT, MAT );
 
 /* explosions */
 extern void Explosions_add   ( OBJECT * );
 extern void Explosions_clear ( void );
-extern void Explosions_draw  ( MAT );
+extern void Explosions_draw  ( MAT, MAT );
 extern int  Explosions_count ( void );
 
 /* jump-gate */
 extern void Jumpgate_init    ( void );
 extern void Jumpgate_open    ( VEC, int );
-extern void Jumpgate_animate ( MAT );
+extern void Jumpgate_animate ( MAT, MAT );
 
 /* one-up */
 extern void One_up_init ( void );
 extern void One_up_add  ( OBJECT * );
-extern void One_up_draw ( MAT );
+extern void One_up_draw ( MAT, MAT );
 
 /*------------------------------------------------------------------
  *

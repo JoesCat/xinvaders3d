@@ -3,6 +3,7 @@
 
     XINVADERS 3D - 3d Shoot'em up
     Copyright (C) 2000 Don Llopis
+    +Copyright(C) 2022 Jose Da Silva
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -260,8 +261,8 @@ static void Add_bomb ( OBJECT * );
 
 void Aliens_init ( void )
 {
-   int      i, j;
-   VEC   tmp_pos;
+   int     i, j;
+   VEC     tmp_pos;
    OBJECT  *alien;
    OBJLIST *f_ptr;
 
@@ -294,17 +295,17 @@ void Aliens_init ( void )
    alien      = &aliens[0];
    Vector_init ( tmp_pos );
 
-   for ( i=0; i<MAX_COLUMNS; i++ )
+   for ( i = 0; i < MAX_COLUMNS; i++ )
       fcolumn[i] = 0;
 
-   for ( i=0; i<MAX_FORMATIONS; i++ )
+   for ( i = 0; i < MAX_FORMATIONS; i++ )
    {
       Objlist_clear ( f_ptr );
 
       Vector_copy ( fstart_pos, tmp_pos );
       tmp_pos[YPOS] += (FORMATION_Y_INC * i);
 
-      for ( j=0; j<ALIENS_PER_FORMATION; j++ )
+      for ( j = 0; j < ALIENS_PER_FORMATION; j++ )
       {
          Object_init    ( alien );
          Object_set_pos ( alien, tmp_pos );
@@ -327,7 +328,7 @@ void Aliens_init ( void )
    }
 
    /* initialize alien bombs */
-   for ( i=0; i<MAX_BOMBS; i++ )
+   for ( i = 0; i < MAX_BOMBS; i++ )
    {
       Object_init ( &bombs[i] );
       bombs[i].radius = BOMB_RADIUS;
@@ -361,7 +362,7 @@ void Update_fcolumn ( OBJECT *obj )
    fcolumn[i] -= 1;
 
    /* select new lead-column if current lead-column is empty */
-   if ( (fleadcol == i) && (fcolumn[i] == 0) )
+   if ( fleadcol == i && fcolumn[i] == 0 )
    {
       j = fleadcol;
       if ( fdir == LEFT )
@@ -396,7 +397,7 @@ void Update_fcolumn ( OBJECT *obj )
 
 void Aliens_update ( void )
 {
-   int i, j, fdir_save, chance;
+   int    i, j, fdir_save, chance;
    OBJECT *alien, *abomb, *tmp;
 
    /* move alien bombs */
@@ -422,7 +423,8 @@ void Aliens_update ( void )
    }
 
    /* update alien formation */
-   if ( (gv->alien_count > 0) && player->active )
+   if ( gv->alien_count > 0 && \
+        ( player1->active || ( gv->pduel && player2->active ) ) )
    {
       fmove += gv->msec;
       if ( fmove > fspeed[fscur] )
@@ -470,7 +472,7 @@ void Aliens_update ( void )
             fdir = FORWARD;
          }
 
-         for ( i=0; i<MAX_FORMATIONS; i++ )
+         for ( i = 0; i < MAX_FORMATIONS; i++ )
          {
             alien = (af_list+i)->head;
             while ( alien )
@@ -516,9 +518,12 @@ void Aliens_update ( void )
       chance = rand() % DROP_BOMB_CHANCE_1;
       if ( chance < DROP_BOMB_CHANCE_2 )
       {
-         /* pick formation in front of player */
-         i = pm->zheight;
-         if ( (i > -1) && (i<ZONE_HEIGHT_MAX) )
+         /* pick formation in front of highest score player */
+         if ( gv->pduel && gv->pscore2 > gv->pscore1 )
+            i = pm2->zheight;
+         else
+            i = pm1->zheight;
+         if ( i >= 0 && i < ZONE_HEIGHT_MAX )
          {
             alien = (af_list+i)->head;
             if ( alien )
@@ -536,7 +541,7 @@ void Aliens_update ( void )
             }
          }
 
-        /* pick a random formation */
+         /* pick a random formation */
          i = rand () % MAX_FORMATIONS;
          alien = (af_list+i)->head;
          if ( alien )
@@ -563,7 +568,7 @@ static void Add_bomb ( OBJECT *alien )
    int    i;
    OBJECT *abomb;
 
-   for ( i=0; i<MAX_BOMBS; i++ )
+   for ( i = 0; i < MAX_BOMBS; i++ )
    {
       abomb = &bombs[i];
       if ( abomb->active == FALSE )
@@ -579,14 +584,20 @@ static void Add_bomb ( OBJECT *alien )
 
 /*================================================================*/
 
-void Aliens_draw ( OBJECT *obj, MAT r )
+void Aliens_draw ( OBJECT *obj, MAT r1, MAT r2 )
 {
    OBJECT *alien;
-   VEC  tmp[16];
-   MAT  tmp_mat;
-   int     i, p[32], fmodel;
+   VEC    tmp[16];
+   MAT    tmp_mat;
+   int    p1[32], p2[32], fmodel;
+   int    i, j, x1R, y1B, x2L, y2T;
 
-   for ( i=0; i<MAX_FORMATIONS; i++ )
+   x1R = gv->x1r;
+   y1B = gv->y1b;
+   x2L = gv->x2l;
+   y2T = gv->y2t;
+
+   for ( i = 0; i < MAX_FORMATIONS; i++ )
    {
       if ( i == MAX_FORMATIONS-1 )
          fmodel = 2;
@@ -598,9 +609,9 @@ void Aliens_draw ( OBJECT *obj, MAT r )
       alien = (af_list+i)->head;
       while ( alien )
       {
-         Matrix_vec_mult ( r, alien->pos, tmp[0] );
-         Camera_project_points ( tmp, p, 1 );
-         Matrix_copy ( r, tmp_mat );
+         Matrix_vec_mult ( r1, alien->pos, tmp[0] );
+         Camera_project_points ( tmp, p1, 1 );
+         Matrix_copy ( r1, tmp_mat );
          Matrix_set_trans ( tmp_mat, tmp[0] );
 
          if ( fanim )
@@ -608,64 +619,328 @@ void Aliens_draw ( OBJECT *obj, MAT r )
          else
             Matrix_vec_multn ( tmp_mat, &avert1[fmodel*16], tmp, 16 );
 
-         Camera_project_points ( tmp, p, 16 );
+         Camera_project_points ( tmp, p1, 16 );
+
+         if ( gv->pduel )
+         {
+            Matrix_vec_mult ( r2, alien->pos, tmp[0] );
+            Camera_project_points ( tmp, p2, 1 );
+            Matrix_copy ( r2, tmp_mat );
+            Matrix_set_trans ( tmp_mat, tmp[0] );
+
+            if ( fanim )
+               Matrix_vec_multn ( tmp_mat, &avert2[fmodel*16], tmp, 16 );
+            else
+               Matrix_vec_multn ( tmp_mat, &avert1[fmodel*16], tmp, 16 );
+
+            Camera_project_points ( tmp, p2, 16 );
+
+            if ( gv->phorizontal )
+            {
+               for ( j = 1; j < 32; j += 2 )
+               {
+                  p1[j] /= 2;
+                  p2[j] = p2[j] / 2 + y2T;
+               }
+            }
+            else if ( gv->pvertical )
+            {
+               for ( j = 0; j < 32; j += 2 )
+               {
+                  p1[j] /= 2;
+                  p2[j] = p2[j] / 2 + x2L;
+               }
+            }
+            else
+            {
+               for ( j = 0; j < 32; j += 2 )
+               {
+                  p1[j] /= 2;
+                  p2[j] = p2[j] / 2 + x2L;
+               }
+               for ( j = 1; j < 32; j += 2 )
+               {
+                  p1[j] /= 2;
+                  p2[j] = p2[j] / 2 + y2T;
+               }
+            }
+
+            /* body */
+            if ( p2[0] >= x2L && p2[2] >= x2L && \
+                 p2[1] >= y2T && p2[3] >= y2T )
+               Draw_line ( p2[0], p2[1], p2[2], p2[3], GREEN );
+            if ( p2[2] >= x2L && p2[4] >= x2L && \
+                 p2[3] >= y2T && p2[5] >= y2T )
+               Draw_line ( p2[2], p2[3], p2[4], p2[5], GREEN );
+            if ( p2[4] >= x2L && p2[6] >= x2L && \
+                 p2[5] >= y2T && p2[7] >= y2T )
+               Draw_line ( p2[4], p2[5], p2[6], p2[7], GREEN );
+            if ( p2[6] >= x2L && p2[0] >= x2L && \
+                 p2[7] >= y2T && p2[1] >= y2T )
+               Draw_line ( p2[6], p2[7], p2[0], p2[1], GREEN );
+
+            /* left leg */
+            if ( p2[8] >= x2L && p2[10] >= x2L && \
+                 p2[9] >= y2T && p2[11] >= y2T )
+               Draw_line ( p2[8], p2[9], p2[10], p2[11], GREEN );
+            if ( p2[10] >= x2L && p2[12] >= x2L && \
+                 p2[11] >= y2T && p2[13] >= y2T )
+               Draw_line ( p2[10], p2[11], p2[12], p2[13], GREEN );
+            if ( p2[12] >= x2L && p2[8] >= x2L && \
+                 p2[13] >= y2T && p2[9] >= y2T )
+               Draw_line ( p2[12], p2[13], p2[8], p2[9], GREEN );
+            if ( p2[10] >= x2L && p2[14] >= x2L && \
+                 p2[11] >= y2T && p2[15] >= y2T )
+               Draw_line ( p2[10], p2[11], p2[14], p2[15], GREEN );
+            if ( p2[14] >= x2L && p2[12] >= x2L && \
+                 p2[15] >= y2T && p2[13] >= y2T )
+               Draw_line ( p2[14], p2[15], p2[12], p2[13], GREEN );
+
+            /* right leg */
+            if ( p2[8] >= x2L && p2[16] >= x2L && \
+                 p2[9] >= y2T && p2[17] >= y2T )
+               Draw_line ( p2[8], p2[9], p2[16], p2[17], GREEN );
+            if ( p2[16] >= x2L && p2[18] >= x2L && \
+                 p2[17] >= y2T && p2[19] >= y2T )
+               Draw_line ( p2[16], p2[17], p2[18], p2[19], GREEN );
+            if ( p2[18] >= x2L && p2[8] >= x2L && \
+                 p2[19] >= y2T && p2[9] >= y2T )
+               Draw_line ( p2[18], p2[19], p2[8], p2[9], GREEN );
+            if ( p2[16] >= x2L && p2[20] >= x2L && \
+                 p2[17] >= y2T && p2[21] >= y2T )
+               Draw_line ( p2[16], p2[17], p2[20], p2[21], GREEN );
+            if ( p2[20] >= x2L && p2[18] >= x2L && \
+                 p2[21] >= y2T && p2[19] >= y2T )
+               Draw_line ( p2[20], p2[21], p2[18], p2[19], GREEN );
+
+            /* left eye */
+            if ( p2[22] >= x2L && p2[24] >= x2L && \
+                 p2[23] >= y2T && p2[25] >= y2T )
+               Draw_line ( p2[22], p2[23], p2[24], p2[25], RED );
+            if ( p2[24] >= x2L && p2[26] >= x2L && \
+                 p2[25] >= y2T && p2[27] >= y2T )
+               Draw_line ( p2[24], p2[25], p2[26], p2[27], RED );
+            if ( p2[26] >= x2L && p2[22] >= x2L && \
+                 p2[27] >= y2T && p2[23] >= y2T )
+               Draw_line ( p2[26], p2[27], p2[22], p2[23], RED );
+
+            /* right eye */
+            if ( p2[22] >= x2L && p2[28] >= x2L && \
+                 p2[23] >= y2T && p2[29] >= y2T )
+               Draw_line ( p2[22], p2[23], p2[28], p2[29], RED );
+            if ( p2[28] >= x2L && p2[30] >= x2L && \
+                 p2[29] >= y2T && p2[31] >= y2T )
+               Draw_line ( p2[28], p2[29], p2[30], p2[31], RED );
+            if ( p2[30] >= x2L && p2[22] >= x2L && \
+                 p2[31] >= y2T && p2[23] >= y2T )
+               Draw_line ( p2[30], p2[31], p2[22], p2[23], RED );
+         }
 
          /* body */
-         Draw_line ( p[0], p[1], p[2], p[3], GREEN );
-         Draw_line ( p[2], p[3], p[4], p[5], GREEN );
-         Draw_line ( p[4], p[5], p[6], p[7], GREEN );
-         Draw_line ( p[6], p[7], p[0], p[1], GREEN );
+         if ( p1[0] < x1R && p1[2] < x1R && \
+              p1[1] < y1B && p1[3] < y1B )
+            Draw_line ( p1[0], p1[1], p1[2], p1[3], GREEN );
+         if ( p1[2] < x1R && p1[4] < x1R && \
+              p1[3] < y1B && p1[5] < y1B )
+            Draw_line ( p1[2], p1[3], p1[4], p1[5], GREEN );
+         if ( p1[4] < x1R && p1[6] < x1R && \
+              p1[5] < y1B && p1[7] < y1B )
+            Draw_line ( p1[4], p1[5], p1[6], p1[7], GREEN );
+         if ( p1[6] < x1R && p1[0] < x1R && \
+              p1[7] < y1B && p1[1] < y1B )
+            Draw_line ( p1[6], p1[7], p1[0], p1[1], GREEN );
 
-        /* left leg */
-         Draw_line ( p[8], p[9], p[10], p[11], GREEN );
-         Draw_line ( p[10], p[11], p[12], p[13], GREEN );
-         Draw_line ( p[12], p[13], p[8], p[9], GREEN );
-         Draw_line ( p[10], p[11], p[14], p[15], GREEN );
-         Draw_line ( p[14], p[15], p[12], p[13], GREEN );
+         /* left leg */
+         if ( p1[8] < x1R && p1[10] < x1R && \
+              p1[9] < y1B && p1[11] < y1B )
+            Draw_line ( p1[8], p1[9], p1[10], p1[11], GREEN );
+         if ( p1[10] < x1R && p1[12] < x1R && \
+              p1[11] < y1B && p1[13] < y1B )
+            Draw_line ( p1[10], p1[11], p1[12], p1[13], GREEN );
+         if ( p1[12] < x1R && p1[8] < x1R && \
+              p1[13] < y1B && p1[9] < y1B )
+            Draw_line ( p1[12], p1[13], p1[8], p1[9], GREEN );
+         if ( p1[10] < x1R && p1[14] < x1R && \
+              p1[11] < y1B && p1[15] < y1B )
+            Draw_line ( p1[10], p1[11], p1[14], p1[15], GREEN );
+         if ( p1[14] < x1R && p1[12] < x1R && \
+              p1[15] < y1B && p1[13] < y1B )
+            Draw_line ( p1[14], p1[15], p1[12], p1[13], GREEN );
 
-        /* right leg */
-         Draw_line ( p[8], p[9], p[16], p[17], GREEN );
-         Draw_line ( p[16], p[17], p[18], p[19], GREEN );
-         Draw_line ( p[18], p[19], p[8], p[9], GREEN );
-         Draw_line ( p[16], p[17], p[20], p[21], GREEN );
-         Draw_line ( p[20], p[21], p[18], p[19], GREEN );
+         /* right leg */
+         if ( p1[8] < x1R && p1[16] < x1R && \
+              p1[9] < y1B && p1[17] < y1B )
+            Draw_line ( p1[8], p1[9], p1[16], p1[17], GREEN );
+         if ( p1[16] < x1R && p1[18] < x1R && \
+              p1[17] < y1B && p1[19] < y1B )
+            Draw_line ( p1[16], p1[17], p1[18], p1[19], GREEN );
+         if ( p1[18] < x1R && p1[8] < x1R && \
+              p1[19] < y1B && p1[9] < y1B )
+            Draw_line ( p1[18], p1[19], p1[8], p1[9], GREEN );
+         if ( p1[16] < x1R && p1[20] < x1R && \
+              p1[17] < y1B && p1[21] < y1B )
+            Draw_line ( p1[16], p1[17], p1[20], p1[21], GREEN );
+         if ( p1[20] < x1R && p1[18] < x1R && \
+              p1[21] < y1B && p1[19] < y1B )
+            Draw_line ( p1[20], p1[21], p1[18], p1[19], GREEN );
 
-        /* left eye */
-         Draw_line ( p[22], p[23], p[24], p[25], RED );
-         Draw_line ( p[24], p[25], p[26], p[27], RED );
-         Draw_line ( p[26], p[27], p[22], p[23], RED );
+         /* left eye */
+         if ( p1[22] < x1R && p1[24] < x1R && \
+              p1[23] < y1B && p1[25] < y1B )
+            Draw_line ( p1[22], p1[23], p1[24], p1[25], RED );
+         if ( p1[24] < x1R && p1[26] < x1R && \
+              p1[25] < y1B && p1[27] < y1B )
+            Draw_line ( p1[24], p1[25], p1[26], p1[27], RED );
+         if ( p1[26] < x1R && p1[22] < x1R && \
+              p1[27] < y1B && p1[23] < y1B )
+            Draw_line ( p1[26], p1[27], p1[22], p1[23], RED );
 
          /* right eye */
-         Draw_line ( p[22], p[23], p[28], p[29], RED );
-         Draw_line ( p[28], p[29], p[30], p[31], RED );
-         Draw_line ( p[30], p[31], p[22], p[23], RED );
+         if ( p1[22] < x1R && p1[28] < x1R && \
+              p1[23] < y1B && p1[29] < y1B )
+            Draw_line ( p1[22], p1[23], p1[28], p1[29], RED );
+         if ( p1[28] < x1R && p1[30] < x1R && \
+              p1[29] < y1B && p1[31] < y1B )
+            Draw_line ( p1[28], p1[29], p1[30], p1[31], RED );
+         if ( p1[30] < x1R && p1[22] < x1R && \
+              p1[31] < y1B && p1[23] < y1B )
+            Draw_line ( p1[30], p1[31], p1[22], p1[23], RED );
 
          alien = alien->next;
       }
    }
 }
 
-void Alien_missile_draw ( OBJECT *obj, MAT r )
+void Alien_missile_draw ( OBJECT *obj, MAT r1, MAT r2 )
 {
-   MAT tmp_mat;
+   MAT tmp_mat1, tmp_mat2;
    VEC tmp[3];
-   int p[6];
+   int x1R, y1B, x2L, y2T;
+   int p1[6], p2[6], p3[6], p4[6];
 
-   Matrix_vec_mult ( r, obj->pos, tmp[0] );
-   Matrix_copy ( r, tmp_mat );
-   Matrix_set_trans ( tmp_mat, tmp[0] );
+   x1R = gv->x1r;
+   y1B = gv->y1b;
 
-   Matrix_vec_multn ( tmp_mat, abomb_vert, tmp, 3 );
-   Camera_project_points ( tmp, p, 3 );
-   Draw_line ( p[0], p[1], p[2], p[3], YELLOW );
-   Draw_line ( p[2], p[3], p[4], p[5], YELLOW );
-   Draw_line ( p[4], p[5], p[0], p[1], YELLOW );
+   Matrix_vec_mult ( r1, obj->pos, tmp[0] );
+   Matrix_copy ( r1, tmp_mat1 );
+   Matrix_set_trans ( tmp_mat1, tmp[0] );
 
-   Matrix_vec_multn ( tmp_mat, abomb_vert2, tmp, 3 );
-   Camera_project_points ( tmp, p, 3 );
-   Draw_line ( p[0], p[1], p[2], p[3], YELLOW );
-   Draw_line ( p[2], p[3], p[4], p[5], YELLOW );
-   Draw_line ( p[4], p[5], p[0], p[1], YELLOW );
+   Matrix_vec_multn ( tmp_mat1, abomb_vert, tmp, 3 );
+   Camera_project_points ( tmp, p1, 3 );
+   Matrix_vec_multn ( tmp_mat1, abomb_vert2, tmp, 3 );
+   Camera_project_points ( tmp, p3, 3 );
+
+   if ( gv->pduel )
+   {
+      x2L = gv->x2l;
+      y2T = gv->y2t;
+
+      Matrix_vec_mult ( r2, obj->pos, tmp[0] );
+      Matrix_copy ( r2, tmp_mat2 );
+      Matrix_set_trans ( tmp_mat2, tmp[0] );
+
+      Matrix_vec_multn ( tmp_mat2, abomb_vert, tmp, 3 );
+      Camera_project_points ( tmp, p2, 3 );
+      Matrix_vec_multn ( tmp_mat2, abomb_vert2, tmp, 3 );
+      Camera_project_points ( tmp, p4, 3 );
+
+      if ( gv->phorizontal )
+      {
+         p1[1] /= 2;
+         p1[3] /= 2;
+         p1[5] /= 2;
+         p3[1] /= 2;
+         p3[3] /= 2;
+         p3[5] /= 2;
+         p2[1] = p2[1] / 2 + y2T;
+         p2[3] = p2[3] / 2 + y2T;
+         p2[5] = p2[5] / 2 + y2T;
+         p4[1] = p4[1] / 2 + y2T;
+         p4[3] = p4[3] / 2 + y2T;
+         p4[5] = p4[5] / 2 + y2T;
+      }
+      else if ( gv->pvertical )
+      {
+         p1[0] /= 2;
+         p1[2] /= 2;
+         p1[4] /= 2;
+         p3[0] /= 2;
+         p3[2] /= 2;
+         p3[4] /= 2;
+         p2[0] = p2[0] / 2 + x2L;
+         p2[2] = p2[2] / 2 + x2L;
+         p2[4] = p2[4] / 2 + x2L;
+         p4[0] = p4[0] / 2 + x2L;
+         p4[2] = p4[2] / 2 + x2L;
+         p4[4] = p4[4] / 2 + x2L;
+      }
+      else
+      {
+         p1[0] /= 2;
+         p1[2] /= 2;
+         p1[4] /= 2;
+         p3[0] /= 2;
+         p3[2] /= 2;
+         p3[4] /= 2;
+         p2[0] = p2[0] / 2 + x2L;
+         p2[2] = p2[2] / 2 + x2L;
+         p2[4] = p2[4] / 2 + x2L;
+         p4[0] = p4[0] / 2 + x2L;
+         p4[2] = p4[2] / 2 + x2L;
+         p4[4] = p4[4] / 2 + x2L;
+         p1[1] /= 2;
+         p1[3] /= 2;
+         p1[5] /= 2;
+         p3[1] /= 2;
+         p3[3] /= 2;
+         p3[5] /= 2;
+         p2[1] = p2[1] / 2 + y2T;
+         p2[3] = p2[3] / 2 + y2T;
+         p2[5] = p2[5] / 2 + y2T;
+         p4[1] = p4[1] / 2 + y2T;
+         p4[3] = p4[3] / 2 + y2T;
+         p4[5] = p4[5] / 2 + y2T;
+      }
+
+      if ( p2[0] >= x2L && p2[2] >= x2L && \
+           p2[1] >= y2T && p2[3] >= y2T )
+         Draw_line ( p2[0], p2[1], p2[2], p2[3], YELLOW );
+      if ( p2[2] >= x2L && p2[4] >= x2L && \
+           p2[3] >= y2T && p2[5] >= y2T )
+         Draw_line ( p2[2], p2[3], p2[4], p2[5], YELLOW );
+      if ( p2[4] >= x2L && p2[0] >= x2L && \
+           p2[5] >= y2T && p2[1] >= y2T )
+         Draw_line ( p2[4], p2[5], p2[0], p2[1], YELLOW );
+
+      if ( p4[0] >= x2L && p4[2] >= x2L && \
+           p4[1] >= y2T && p4[3] >= y2T )
+         Draw_line ( p4[0], p4[1], p4[2], p4[3], YELLOW );
+      if ( p2[2] >= x2L && p4[4] >= x2L && \
+           p2[3] >= y2T && p4[5] >= y2T )
+         Draw_line ( p4[2], p4[3], p4[4], p4[5], YELLOW );
+      if ( p4[4] >= x2L && p4[0] >= x2L && \
+           p4[5] >= y2T && p4[1] >= y2T )
+         Draw_line ( p4[4], p4[5], p4[0], p4[1], YELLOW );
+   }
+   if ( p1[0] < x1R && p1[2] < x1R && \
+        p1[1] < y1B && p1[3] < y1B )
+      Draw_line ( p1[0], p1[1], p1[2], p1[3], YELLOW );
+   if ( p1[2] < x1R && p1[4] < x1R && \
+        p1[3] < y1B && p1[5] < y1B )
+      Draw_line ( p1[2], p1[3], p1[4], p1[5], YELLOW );
+   if ( p1[4] < x1R && p1[0] < x1R && \
+        p1[5] < y1B && p1[1] < y1B )
+      Draw_line ( p1[4], p1[5], p1[0], p1[1], YELLOW );
+
+   if ( p3[0] < x1R && p3[2] < x1R && \
+        p3[1] < y1B && p3[3] < y1B )
+      Draw_line ( p3[0], p3[1], p3[2], p3[3], YELLOW );
+   if ( p3[2] < x1R && p3[4] < x1R && \
+        p3[3] < y1B && p3[5] < y1B )
+      Draw_line ( p3[2], p3[3], p3[4], p3[5], YELLOW );
+   if ( p3[4] < x1R && p3[0] < x1R && \
+        p3[5] < y1B && p3[1] < y1B )
+      Draw_line ( p3[4], p3[5], p3[0], p3[1], YELLOW );
 }
 
 /*================================================================*/
@@ -685,47 +960,160 @@ void Ufo_spawn ( void )
    ufo->active = TRUE;
 }
 
-void Ufo_draw ( OBJECT *obj, MAT r )
+void Ufo_draw ( OBJECT *obj, MAT r1, MAT r2 )
 {
    MAT tmp_mat;
    VEC tmp[17];
-   int p[34];
+   int p1[34], p2[34];
+   int i, x1R, y1B, x2L, y2T;
    unsigned int color;
+
+   x1R = gv->x1r;
+   y1B = gv->y1b;
 
    ufo->delay += gv->msec;
    if ( ufo->delay > UFO_LIGHTS_CYCLE )
    {
       ufo->delay -= UFO_LIGHTS_CYCLE;
       ucolor++;
-      if ( ucolor == 4 )
+      if ( ucolor >= 4 )
          ucolor = 0;
    }
    color = RED - ( ucolor * 15 );
 
-   Matrix_vec_mult ( r, obj->pos, tmp[0] );
-   Matrix_copy ( r, tmp_mat );
+   Matrix_vec_mult ( r1, obj->pos, tmp[0] );
+   Matrix_copy ( r1, tmp_mat );
    Matrix_set_trans ( tmp_mat, tmp[0] );
 
    Matrix_vec_multn ( tmp_mat, uvert1, tmp, 17 );
-   Camera_project_points ( tmp, p, 17 );
-   Draw_line ( p[0], p[1], p[2], p[3], GREEN );
-   Draw_line ( p[2], p[3], p[4], p[5], GREEN );
-   Draw_line ( p[4], p[5], p[6], p[7], GREEN );
-   Draw_line ( p[6], p[7], p[0], p[1], GREEN );
+   Camera_project_points ( tmp, p1, 17 );
+   if ( gv->pduel )
+   {
+      x2L = gv->x2l;
+      y2T = gv->y2t;
 
-   Draw_line ( p[8], p[9], p[10], p[11], GREEN );
-   Draw_line ( p[8], p[9], p[12], p[13], GREEN );
+      Matrix_vec_mult ( r2, obj->pos, tmp[0] );
+      Matrix_copy ( r2, tmp_mat );
+      Matrix_set_trans ( tmp_mat, tmp[0] );
 
-   Draw_line ( p[14], p[15], p[16], p[17], GREEN );
-   Draw_line ( p[14], p[15], p[18], p[19], GREEN );
+      Matrix_vec_multn ( tmp_mat, uvert1, tmp, 17 );
+      Camera_project_points ( tmp, p2, 17 );
 
-   Draw_line ( p[20], p[21], p[22], p[23], GREEN );
-   Draw_line ( p[22], p[23], p[24], p[25], GREEN );
+      if ( gv->phorizontal )
+      {
+         for ( i = 1; i < 34; i += 2 )
+         {
+            p1[i] /= 2;
+            p2[i] = p2[i] / 2 + y2T;
+         }
+      }
+      else if ( gv->pvertical )
+      {
+         for ( i = 0; i < 34; i += 2 )
+         {
+            p1[i] /= 2;
+            p2[i] = p2[i] / 2 + x2L;
+         }
+      }
+      else
+      {
+         for ( i = 0; i < 34; i += 2 )
+         {
+            p1[i] /= 2;
+            p2[i] = p2[i] / 2 + x2L;
+         }
+         for ( i = 1; i < 34; i += 2 )
+         {
+            p1[i] /= 2;
+            p2[i] = p2[i] / 2 + y2T;
+         }
+      }
 
-   Draw_point ( p[26], p[27], color );
-   Draw_point ( p[28], p[29], color );
-   Draw_point ( p[30], p[31], color );
-   Draw_point ( p[32], p[33], color );
+      if ( p2[0] >= x2L && p2[2] >= x2L && \
+           p2[1] >= y2T && p2[3] >= y2T )
+         Draw_line ( p2[0], p2[1], p2[2], p2[3], GREEN );
+      if ( p2[2] >= x2L && p2[4] >= x2L && \
+           p2[3] >= y2T && p2[5] >= y2T )
+         Draw_line ( p2[2], p2[3], p2[4], p2[5], GREEN );
+      if ( p2[4] >= x2L && p2[6] >= x2L && \
+           p2[5] >= y2T && p2[7] >= y2T )
+         Draw_line ( p2[4], p2[5], p2[6], p2[7], GREEN );
+      if ( p2[6] >= x2L && p2[0] >= x2L && \
+           p2[7] >= y2T && p2[1] >= y2T )
+         Draw_line ( p2[6], p2[7], p2[0], p2[1], GREEN );
+
+      if ( p2[8] >= x2L && p2[10] >= x2L && \
+           p2[9] >= y2T && p2[11] >= y2T )
+         Draw_line ( p2[8], p2[9], p2[10], p2[11], GREEN );
+      if ( p2[8] >= x2L && p2[12] >= x2L && \
+           p2[9] >= y2T && p2[13] >= y2T )
+         Draw_line ( p2[8], p2[9], p2[12], p2[13], GREEN );
+
+      if ( p2[14] >= x2L && p2[16] >= x2L && \
+           p2[15] >= y2T && p2[17] >= y2T )
+         Draw_line ( p2[14], p2[15], p2[16], p2[17], GREEN );
+      if ( p2[14] >= x2L && p2[18] >= x2L && \
+           p2[15] >= y2T && p2[19] >= y2T )
+         Draw_line ( p2[14], p2[15], p2[18], p2[19], GREEN );
+
+      if ( p2[20] >= x2L && p2[22] >= x2L && \
+           p2[21] >= y2T && p2[23] >= y2T )
+         Draw_line ( p2[20], p2[21], p2[22], p2[23], GREEN );
+      if ( p2[22] >= x2L && p2[24] >= x2L && \
+           p2[23] >= y2T && p2[25] >= y2T )
+         Draw_line ( p2[22], p2[23], p2[24], p2[25], GREEN );
+
+      if ( p2[26] >= x2L && p2[27] >= y2T )
+         Draw_point ( p2[26], p2[27], color );
+      if ( p2[28] >= x2L && p2[29] >= y2T )
+         Draw_point ( p2[28], p2[29], color );
+      if ( p2[30] >= x2L && p2[31] >= y2T )
+         Draw_point ( p2[30], p2[31], color );
+      if ( p2[32] >= x2L && p2[33] >= y2T )
+         Draw_point ( p2[32], p2[33], color );
+   }
+   if ( p1[0] < x1R && p1[2] < x1R && \
+        p1[1] < y1B && p1[3] < y1B )
+      Draw_line ( p1[0], p1[1], p1[2], p1[3], GREEN );
+   if ( p1[2] < x1R && p1[4] < x1R && \
+        p1[3] < y1B && p1[5] < y1B )
+      Draw_line ( p1[2], p1[3], p1[4], p1[5], GREEN );
+   if ( p1[4] < x1R && p1[6] < x1R && \
+        p1[5] < y1B && p1[7] < y1B )
+      Draw_line ( p1[4], p1[5], p1[6], p1[7], GREEN );
+   if ( p1[6] < x1R && p1[0] < x1R && \
+        p1[7] < y1B && p1[1] < y1B )
+      Draw_line ( p1[6], p1[7], p1[0], p1[1], GREEN );
+
+   if ( p1[8] < x1R && p1[10] < x1R && \
+        p1[9] < y1B && p1[11] < y1B )
+      Draw_line ( p1[8], p1[9], p1[10], p1[11], GREEN );
+   if ( p1[8] < x1R && p1[12] < x1R && \
+        p1[9] < y1B && p1[33] < y1B )
+      Draw_line ( p1[8], p1[9], p1[12], p1[13], GREEN );
+
+   if ( p1[14] < x1R && p1[16] < x1R && \
+        p1[15] < y1B && p1[17] < y1B )
+      Draw_line ( p1[14], p1[15], p1[16], p1[17], GREEN );
+   if ( p1[14] < x1R && p1[18] < x1R && \
+        p1[15] < y1B && p1[19] < y1B )
+      Draw_line ( p1[14], p1[15], p1[18], p1[19], GREEN );
+
+   if ( p1[20] < x1R && p1[22] < x1R && \
+        p1[21] < y1B && p1[23] < y1B )
+      Draw_line ( p1[20], p1[21], p1[22], p1[23], GREEN );
+   if ( p1[22] < x1R && p1[24] < x1R && \
+        p1[23] < y1B && p1[25] < y1B )
+      Draw_line ( p1[22], p1[23], p1[24], p1[25], GREEN );
+
+   if ( p1[26] < x1R && p1[27] < y1B )
+      Draw_point ( p1[26], p1[27], color );
+   if ( p1[28] < x1R && p1[29] < y1B )
+      Draw_point ( p1[28], p1[29], color );
+   if ( p1[30] < x1R && p1[31] < y1B )
+      Draw_point ( p1[30], p1[31], color );
+   if ( p1[32] < x1R && p1[33] < y1B )
+      Draw_point ( p1[32], p1[33], color );
 }
 
 /*================================================================*/

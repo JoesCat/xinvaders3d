@@ -1,5 +1,5 @@
 /*------------------------------------------------------------------
-  externs.h: Global Game Variables
+  externs.h: Global Game Variables 
 
     XINVADERS 3D - 3d Shoot'em up
     Copyright (C) 2000 Don Llopis
@@ -40,12 +40,24 @@ struct GAMEVARSSTRUCT
    long sw_t;      /* stop-watch current # of seconds */
    long sw_save;   /* stop-watch pause */
 
+   long win_width;
+   long win_height;
+
    int key_QUIT;
-   int key_UP;
-   int key_DOWN;
-   int key_LEFT;
-   int key_RIGHT;
-   int key_FIRE;
+   int key_UP1;
+   int key_DOWN1;
+   int key_LEFT1;
+   int key_RIGHT1;
+   int key_FIRE1;
+   int key_1PLAYER;
+   int key_DUELPLAY;
+   int key_DUELPLAY_H;
+   int key_DUELPLAY_V;
+   int key_UP2;
+   int key_DOWN2;
+   int key_LEFT2;
+   int key_RIGHT2;
+   int key_FIRE2;
 
    /* */
    int formation_zone;
@@ -60,12 +72,23 @@ struct GAMEVARSSTRUCT
    int intro_done;
 
    long hi_score;
-   long pscore;    /* player's current score */
-   long pbonus;    /* player bonus counter */
-   int  plives;    /* player's current # of lives */
-   int  pblinking; /* player invunerable */
+   long pscore1;   /* player's current score */
+   long pscore2;
+   long pbonus1;   /* player bonus counter */
+   long pbonus2;
+   int  plives1;   /* player's current # of lives */
+   int  plives2;
+   int  pblink1;   /* player invunerable */
+   int  pblink2;
+
+   int  pduel;     /* one players, or player duel */
+   int  pfocus;    /* player focus 0 or 1 */
+   int  phorizontal;
+   int  pvertical;
    int  *hi_score_c[20];
-   int  *pscore_c[20];
+   int  *pscore_c1[20];
+   int  *pscore_c2[20];
+   int  x1l, x1r, y1t, y1b, x2l, x2r, y2t, y2b;
 };
 
 /* game.c */
@@ -79,8 +102,8 @@ extern char *game_rules_info[];
 extern TIMER gtimer, *gt;
 
 /* player.c : the player(s) */
-extern OBJECT  *player;
-extern OBJECT  *pm;
+extern OBJECT  *player1, *player2;
+extern OBJECT  *pm1, *pm2;
 
 /* alien.c : the aliens, bombs, and ufo */
 extern OBJECT  *ufo;

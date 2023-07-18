@@ -29,11 +29,11 @@
 
 /* local variables */
 static float hfov, vfov, hpc, vpc;
-static float screen_width, screen_height, half_screen_width,
+static float screen_width, screen_height, half_screen_width, \
              half_screen_height;
 static float aspect_ratio;
 static float hadjust, vadjust;
-static MAT r_2_l; 
+static MAT r_2_l_1, r_2_l_2;
 
 
 void Camera_init ( unsigned int width, unsigned int height, float fov )
@@ -42,13 +42,13 @@ void Camera_init ( unsigned int width, unsigned int height, float fov )
   screen_height      = (float) height;
   half_screen_width  = screen_width / 2.0f;
   half_screen_height = screen_height / 2.0f;
-  
+
   /* calculate horizontal & vertical field of view */
 
   /* horizontal compensate = HALF_SCREEN_WIDTH / tan ( degrees / 2 )
      vertical compensate = HALF_SCREEN_HEIGHT / tan ( degrees / 2 )
 
-     see "Building 3d Game Engine" by Brain Hook
+     see "Building 3d Game Engine" by Brian Hook
   */
 
   hfov = vfov = fov;
@@ -65,9 +65,10 @@ void Camera_init ( unsigned int width, unsigned int height, float fov )
   vadjust = (vpc * aspect_ratio);
 
   /* initialize coordinate system conversion mat */
-  Matrix_id ( r_2_l );
-  r_2_l[2][2] = -1.0f;
-  
+  Matrix_id ( r_2_l_1 );
+  r_2_l_1[2][2] = -1.0f;
+  Matrix_id ( r_2_l_2 );
+  r_2_l_2[2][2] = -1.0f;
 }
 
 void Camera_project_point ( VEC a, int b[2] )
@@ -83,7 +84,7 @@ void Camera_project_point ( VEC a, int b[2] )
 void Camera_project_points ( VEC a[], int b[], int n )
 {
    int i, j;
-  
+
    for ( i=0, j=0; i<n; i++, j+=2 )
    {
      b[j] = (int) ( a[i][0] * hadjust / a[i][2] + half_screen_width );
@@ -91,7 +92,7 @@ void Camera_project_points ( VEC a[], int b[], int n )
    }
 }
 
-void Camera_transform ( MAT r, VEC up, VEC from, VEC at )
+void Camera_transform ( MAT r, VEC up, VEC from, VEC at, int focus )
 {
   VEC x, y, z, tmp, pos;
   MAT tmp_mat;
@@ -134,5 +135,8 @@ void Camera_transform ( MAT r, VEC up, VEC from, VEC at )
      to left hand coordinate system
      leaving the result in 'r'
   */
-  Matrix_mult ( r_2_l, tmp_mat, r );
+  if ( focus )
+     Matrix_mult ( r_2_l_2, tmp_mat, r );
+  else
+     Matrix_mult ( r_2_l_1, tmp_mat, r );
 }

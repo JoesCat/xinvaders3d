@@ -138,7 +138,6 @@ int Graphics_init ( unsigned int win_width, unsigned int win_height )
    color_gc = XCreateGC ( display, win, gc_valuemask, &gc_values );
    text_gc  = XCreateGC ( display, win, gc_valuemask, &gc_values );
 
-
    /* load default font */
    font_info = XLoadQueryFont ( display, font_name );
    if ( !font_info )
@@ -179,7 +178,6 @@ int Graphics_init ( unsigned int win_width, unsigned int win_height )
    color_data[192][0] = 63 * 1024;
    color_data[192][1] = 63 * 1024;
    color_data[192][2] = 32 * 1024;
-
 
    for ( i=0; i<MAX_COLORS; i++ )
    {
@@ -232,6 +230,20 @@ int Graphics_init ( unsigned int win_width, unsigned int win_height )
    fprintf ( stderr, "Q is %d\n", XKeysymToKeycode ( display, XK_Q ) );
    fprintf ( stderr, "f is %d\n", XKeysymToKeycode ( display, XK_f ) );
    fprintf ( stderr, "F is %d\n", XKeysymToKeycode ( display, XK_F ) );
+   fprintf ( stderr, "1 Player mode is %d\n", XKeysymToKeycode ( display, XK_1 ) );
+   fprintf ( stderr, "2 Player Duel_H is %d\n", XKeysymToKeycode ( display, XK_2 ) );
+   fprintf ( stderr, "2 Player Duel_V is %d\n", XKeysymToKeycode ( display, XK_3 ) );
+   fprintf ( stderr, "2 Player Duel is %d\n", XKeysymToKeycode ( display, XK_4 ) );
+   fprintf ( stderr, "a is %d\n", XKeysymToKeycode ( display, XK_a ) );
+   fprintf ( stderr, "A is %d\n", XKeysymToKeycode ( display, XK_A ) );
+   fprintf ( stderr, "i is %d\n", XKeysymToKeycode ( display, XK_i ) );
+   fprintf ( stderr, "I is %d\n", XKeysymToKeycode ( display, XK_I ) );
+   fprintf ( stderr, "j is %d\n", XKeysymToKeycode ( display, XK_j ) );
+   fprintf ( stderr, "J is %d\n", XKeysymToKeycode ( display, XK_J ) );
+   fprintf ( stderr, "k is %d\n", XKeysymToKeycode ( display, XK_k ) );
+   fprintf ( stderr, "K is %d\n", XKeysymToKeycode ( display, XK_K ) );
+   fprintf ( stderr, "m is %d\n", XKeysymToKeycode ( display, XK_m ) );
+   fprintf ( stderr, "M is %d\n", XKeysymToKeycode ( display, XK_M ) );
    fprintf ( stderr, "ESC is %d\n", XKeysymToKeycode ( display, XK_Escape ) );
 #endif
 
@@ -300,27 +312,52 @@ int Handle_events ( void )
             switch ( keysym )
             {
                case XK_space:
-                  gv->key_FIRE = TRUE;
+                  gv->key_FIRE1 = TRUE;
                   break;
 
                case XK_Up:
                case XK_KP_Up:
-                  gv->key_UP = TRUE;
+                  gv->key_UP1 = TRUE;
                   break;
 
                case XK_Down:
                case XK_KP_Down:
-                  gv->key_DOWN = TRUE;
+                  gv->key_DOWN1 = TRUE;
                   break;
 
                case XK_Left:
                case XK_KP_Left:
-                  gv->key_LEFT = TRUE;
+                  gv->key_LEFT1 = TRUE;
                   break;
 
                case XK_Right:
                case XK_KP_Right:
-                  gv->key_RIGHT = TRUE;
+                  gv->key_RIGHT1 = TRUE;
+                  break;
+
+               case XK_a:
+               case XK_A:
+                  gv->key_FIRE2 = TRUE;
+                  break;
+
+               case XK_i:
+               case XK_I:
+                  gv->key_UP2 = TRUE;
+                  break;
+
+               case XK_m:
+               case XK_M:
+                  gv->key_DOWN2 = TRUE;
+                  break;
+
+               case XK_j:
+               case XK_J:
+                  gv->key_LEFT2 = TRUE;
+                  break;
+
+               case XK_k:
+               case XK_K:
+                  gv->key_RIGHT2 = TRUE;
                   break;
 
                case XK_f:
@@ -345,6 +382,22 @@ int Handle_events ( void )
                   return FALSE;
                   break;
 
+               case XK_1:
+                  gv->key_1PLAYER = TRUE;
+                  break;
+
+               case XK_2:
+                  gv->key_DUELPLAY_H = TRUE;
+                  break;
+
+               case XK_3:
+                  gv->key_DUELPLAY_V = TRUE;
+                  break;
+
+               case XK_4:
+                  gv->key_DUELPLAY = TRUE;
+                  break;
+
                default:
                   break;
             }
@@ -355,27 +408,68 @@ int Handle_events ( void )
             switch ( keysym )
             {
                case XK_space:
-                  gv->key_FIRE = FALSE;
+                  gv->key_FIRE1 = FALSE;
                   break;
 
                case XK_Up:
                case XK_KP_Up:
-                  gv->key_UP = FALSE;
+                  gv->key_UP1 = FALSE;
                   break;
 
                case XK_Down:
                case XK_KP_Down:
-                  gv->key_DOWN = FALSE;
+                  gv->key_DOWN1 = FALSE;
                   break;
 
                case XK_Left:
                case XK_KP_Left:
-                  gv->key_LEFT = FALSE;
+                  gv->key_LEFT1 = FALSE;
                   break;
 
                case XK_Right:
                case XK_KP_Right:
-                  gv->key_RIGHT = FALSE;
+                  gv->key_RIGHT1 = FALSE;
+                  break;
+
+               case XK_a:
+               case XK_A:
+                  gv->key_FIRE2 = FALSE;
+                  break;
+
+               case XK_i:
+               case XK_I:
+                  gv->key_UP2 = FALSE;
+                  break;
+
+               case XK_m:
+               case XK_M:
+                  gv->key_DOWN2 = FALSE;
+                  break;
+
+               case XK_j:
+               case XK_J:
+                  gv->key_LEFT2 = FALSE;
+                  break;
+
+               case XK_k:
+               case XK_K:
+                  gv->key_RIGHT2 = FALSE;
+                  break;
+
+               case XK_1:
+                  gv->key_1PLAYER = FALSE;
+                  break;
+
+               case XK_2:
+                  gv->key_DUELPLAY_H = FALSE;
+                  break;
+
+               case XK_3:
+                  gv->key_DUELPLAY_V = FALSE;
+                  break;
+
+               case XK_4:
+                  gv->key_DUELPLAY = FALSE;
                   break;
 
                default:

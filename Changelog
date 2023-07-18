@@ -1,3 +1,7 @@
+xinvaders3d (1.7.0)
+  * Added player_2, two player duel mode to Xinvaders3d game.
+ -- Joe Da Silva <digital@joescat.com>  2023 July 17
+
 xinvaders3d (1.6.0)
   * Thanks to jamesbond3142 for fixing a segfault seen in 64bit
     and also for adding lrint (as per information in issue #1).

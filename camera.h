@@ -22,8 +22,7 @@
 #ifndef CAMERA
 #define CAMERA
 
-
-#ifdef NEW_CAMERA 
+#ifdef NEW_CAMERA
 
 typedef struct CAMERASTRUCT CAMERA;
 struct CAMERASTRUCT
@@ -63,6 +62,6 @@ extern void Camera_update ( CAMERA *cam );
 extern void Camera_init ( unsigned int width, unsigned int height, float fov );
 extern void Camera_project_point ( VEC a, int b[2] );
 extern void Camera_project_points ( VEC a[], int b[], int n );
-extern void Camera_transform ( MAT r, VEC up, VEC from, VEC at );
+extern void Camera_transform ( MAT r, VEC up, VEC from, VEC at, int focus );
 
 #endif

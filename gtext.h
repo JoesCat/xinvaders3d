@@ -4,13 +4,13 @@
 /* XInvaders3d game Text */
 
 /* use a null terminator, so code doesn't have to
-	be changed in many places. Don't use \n; assume
-	a line break suitable to the particular platform
-	should be generated after each line. TBB */
+   be changed in many places. Don't use \n; assume
+   a line break suitable to the particular platform
+   should be generated after each line. TBB */
 char *game_about_info[] =
 {
    "Thanks for playing XInvaders 3D.",
-   "XInvaders 3D v1.4.0, Copyright 2000 Don Llopis",
+   "XInvaders 3D v1.7.0, Copyright 2000 Don Llopis",
    "XInvaders 3D comes with ABSOLUTELY NO WARRANTY.",
    "This is free software, and you are welcome to",
    "redistribute it under certain conditions. See",
@@ -32,6 +32,14 @@ char *game_rules_info[] =
    "p: Pause game",
    "q: reset game",
    "ESC: Quit program",
+   "1: Lone Defender",
+   "2: 2 Player Duel H",
+   "3: 2 Player Duel V",
+   "a: Fire Missile, player2",
+   "i: move up, player2",
+   "j: move left, player2",
+   "k: move right, player2",
+   "m: move down, player2",
    NULL
 };
 

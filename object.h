@@ -27,7 +27,7 @@ typedef struct OBJECTSTRUCT  OBJECT;
 typedef struct OBJLISTSTRUCT OBJLIST;
 
 typedef void (*PFV1) ( OBJECT * );
-typedef void (*PFV2) ( OBJECT *, MAT );
+typedef void (*PFV2) ( OBJECT *, MAT, MAT );
 
 /*------------------------------------------------------------------
  * MODEL:

@@ -31,7 +31,7 @@ From bottom to top:
 ```
 
 
-##Keys:
+## Keys:
 
 ```
  - SPACE         : Fire Missile
@@ -43,6 +43,24 @@ From bottom to top:
  - f             : Show frame-rate
  - p             : Pause game
  - ESC           : Terminate Program
+```
+
+## Two Player Duel:
+
+Two players can also play in a duel for highest points.
+You will need two keyboards, otherwise it will be difficult to play.
+
+## Two Player Keys:
+
+```
+ - a             : Fire Missile
+ - i             : move up
+ - j             : move left
+ - k             : move right
+ - m             : move down
+ - 1             : lone star fighter mode
+ - 2             : two player horizontal split screen
+ - 3             : two player vertical split screen
 ```
 
 
@@ -68,6 +86,11 @@ Thanks to the following people who contributed to the development of XInvaders3d
  - Chris Butler for creating the DEB package.
  - Peter da Silva for the FreeBSD fix.
  - Bill Kendrick for the Window Manager fix.
+
+### Additional Greetings (from Joe Da Silva, year2022):
+
+Fetched a number of past fixes and patches plus did some bug fixes and improvements up to version 1.3.6.
+Added updated autoconf, found and fixed a few more quirks and bugs, plus added two player duel mode.
 
 
 ## How To Compile And Play Xinvaders 3D:
@@ -97,7 +120,7 @@ Note: For other systems please see the README.xxx for that system.
 ### 3 - Release Tag
 
 For users who do not have autoconf or automake available, there are release tagpoints.
-The first release is [![v1.5.0]](https://github.com/JoesCat/xinvaders3d/releases/tag/1.5.0)
+The first release was [![v1.5.0]](https://github.com/JoesCat/xinvaders3d/releases/tag/1.5.0)
 Download the -dist- file and expand it so that you can run it.
 
 Installing on Linux

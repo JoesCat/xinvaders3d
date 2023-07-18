@@ -3,6 +3,7 @@
 
     XINVADERS 3D - 3d Shoot'em up
     Copyright (C) 2000 Don Llopis
+    +Copyright(C) 2023 Jose Da Silva
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -42,8 +43,8 @@ enum player_enum
    PLAYER_BLINK_TIME   = 5000  /* 5.0 sec */
 };
 
-OBJECT player_1, *player;
-OBJECT player_missile, *pm;
+OBJECT player_1, player_2, *player1, *player2;
+OBJECT player_missile1, player_missile2, *pm1, *pm2;
 
 static VEC start_pos      = { 0.0f, 250.0f, -25.0f, 1.0f };
 static VEC start_dir      = { 0.0f, 0.0f, -1.0f, 1.0f };
@@ -54,44 +55,73 @@ static VEC thrust_right   = { 10.0f, 0.0f, 0.0f, 1.0f };
 static VEC missile_offset = { 0.0f, 0.0f, 0.0f, 1.0f };
 static VEC missile_thrust = { 0.0f, 0.0f, -50.0f, 1.0f };
 
-static int pcolor; /* Player color */
+static int pcolor1, pcolor2; /* Player colors */
 
 /*================================================================*/
 
-void Player_init ( void )
+void Player_init ( int pnum )
 {
-   gv->pblinking = TRUE;
-   
-   player = &player_1;
+   if ( pnum )
+   {
+      player2 = &player_2;
+      gv->pblink2 = TRUE;
 
-   Object_init ( player );
-   Object_set_actionfn ( player, Player_update );
-   Object_set_drawfn  ( player, Player_blink );
+      Object_init ( player2 );
+      Object_set_actionfn ( player2, Player_update2 );
+      Object_set_drawfn   ( player2, Player_blink2 );
 
-   Object_set_pos ( player, start_pos );
-   Object_set_dir ( player, start_dir );
+      Object_set_pos ( player2, start_pos );
+      Object_set_dir ( player2, start_dir );
 
-   player->active         = TRUE;
-   player->radius         = PLAYER_RADIUS;
-   player->radius_squared = PLAYER_RADIUS_SQUARED;
-   player->frame          = 0;
-   player->rot            = 0.0;
-   pcolor                 = RED;
-   Object_update_zone ( player );
+      player2->active         = TRUE;
+      player2->radius         = PLAYER_RADIUS;
+      player2->radius_squared = PLAYER_RADIUS_SQUARED;
+      player2->frame          = 0;
+      player2->rot            = 0.0;
+      pcolor2                 = BLUE;
+      Object_update_zone ( player2 );
 
-   pm = &player_missile;
-   Object_init ( pm );
-   pm->radius         = MISSLE_RADIUS;
-   pm->radius_squared = MISSLE_RADIUS_SQUARED;
-   Object_set_actionfn ( pm, Player_missile_update );
-   Object_set_drawfn  ( pm, Player_missile_draw );
+      pm2 = &player_missile2;
+      Object_init ( pm2 );
+      pm2->radius             = MISSLE_RADIUS;
+      pm2->radius_squared     = MISSLE_RADIUS_SQUARED;
+      Object_set_actionfn ( pm2, Player_missile_update );
+      Object_set_drawfn   ( pm2, Player_missile_draw2 );
+   }
+   else
+   {
+      player1 = &player_1;
+      gv->pblink1 = TRUE;
+
+      Object_init ( player1 );
+      Object_set_actionfn ( player1, Player_update1 );
+      Object_set_drawfn  ( player1, Player_blink1 );
+
+      Object_set_pos ( player1, start_pos );
+      Object_set_dir ( player1, start_dir );
+
+      player1->active         = TRUE;
+      player1->radius         = PLAYER_RADIUS;
+      player1->radius_squared = PLAYER_RADIUS_SQUARED;
+      player1->frame          = 0;
+      player1->rot            = 0.0;
+      pcolor1                 = RED;
+      Object_update_zone ( player1 );
+
+      pm1 = &player_missile1;
+      Object_init ( pm1 );
+      pm1->radius             = MISSLE_RADIUS;
+      pm1->radius_squared     = MISSLE_RADIUS_SQUARED;
+      Object_set_actionfn ( pm1, Player_missile_update );
+      Object_set_drawfn   ( pm1, Player_missile_draw1 );
+   }
 }
 
 /*================================================================*/
 
-void Player_update ( OBJECT *obj )
+void Player_update1 ( OBJECT *obj )
 {
-   if ( gv->key_UP )
+   if ( gv->key_UP1 )
    {
       obj->pos[YPOS] += thrust_up[YPOS] * gv->fadjust;
       Object_update_zone ( obj );
@@ -99,7 +129,7 @@ void Player_update ( OBJECT *obj )
          obj->pos[YPOS] = MAX_Y;
    }
 
-   if ( gv->key_DOWN )
+   if ( gv->key_DOWN1 )
    {
       obj->pos[YPOS] += thrust_down[YPOS] * gv->fadjust;
       Object_update_zone ( obj );
@@ -107,68 +137,145 @@ void Player_update ( OBJECT *obj )
          obj->pos[YPOS] = MIN_Y;
    }
 
-   if ( gv->key_LEFT )
+   if ( gv->key_LEFT1 )
    {
       obj->pos[XPOS] += thrust_left[XPOS] * gv->fadjust;
-      player->rot += ROT_Z * gv->fadjust;
-      
+      player1->rot += ROT_Z * gv->fadjust;
+
       if ( obj->pos[XPOS] < MIN_X )
          obj->pos[XPOS] = MIN_X;
-      
-      if ( player->rot > MAX_ROT )
-         player->rot = MAX_ROT;
+
+      if ( player1->rot > MAX_ROT )
+         player1->rot = MAX_ROT;
    }
 
-   if ( gv->key_RIGHT )
+   if ( gv->key_RIGHT1 )
    {
       obj->pos[XPOS] += thrust_right[XPOS] * gv->fadjust;
-      player->rot -= ROT_Z * gv->fadjust;
-      
+      player1->rot -= ROT_Z * gv->fadjust;
+
       if ( obj->pos[XPOS] > MAX_X )
          obj->pos[XPOS] = MAX_X;
 
-      if ( player->rot < -MAX_ROT )
-         player->rot = -MAX_ROT;
+      if ( player1->rot < -MAX_ROT )
+         player1->rot = -MAX_ROT;
    }
 
-   if ( (gv->key_LEFT == FALSE) && (gv->key_RIGHT == FALSE) )
+   if ( (gv->key_LEFT1 == FALSE) && (gv->key_RIGHT1 == FALSE) )
    {
       /* please re-do this major hackyness */
-      if ( ( player->rot < -0.03 ) ||
-            ( player->rot > 0.03 ) )
+      if ( ( player1->rot < -0.03 ) ||
+            ( player1->rot > 0.03 ) )
       {
-         if ( player->rot < -0.03 )
+         if ( player1->rot < -0.03 )
          {
-            player->rot += ROT_Z * gv->fadjust;
-            if ( player->rot > 0.0 )
-               player->rot = 0.0;
+            player1->rot += ROT_Z * gv->fadjust;
+            if ( player1->rot > 0.0 )
+               player1->rot = 0.0;
          }
          else
          {
-            if ( player->rot > 0.03 )
+            if ( player1->rot > 0.03 )
             {
-               player->rot -= ROT_Z * gv->fadjust;
-               if ( player->rot < 0.0 )
-                  player->rot = 0.0;
+               player1->rot -= ROT_Z * gv->fadjust;
+               if ( player1->rot < 0.0 )
+                  player1->rot = 0.0;
             }
          }
       }
    }
 
-   if ( gv->key_FIRE && !pm->active )
+   if ( gv->key_FIRE1 && !pm1->active )
    {
-      pm->active      = TRUE;
-      pm->zone        = obj->zone;
-      pm->zheight     = obj->zheight;
-      Vector_init ( pm->pos );
-      Vector_copy ( obj->pos, pm->pos );
-      Vector_copy ( obj->pos, pm->old_pos );
-      Vector_addd ( pm->pos, missile_offset );
+      pm1->active      = TRUE;
+      pm1->zone        = obj->zone;
+      pm1->zheight     = obj->zheight;
+      Vector_init ( pm1->pos );
+      Vector_copy ( obj->pos, pm1->pos );
+      Vector_copy ( obj->pos, pm1->old_pos );
+      Vector_addd ( pm1->pos, missile_offset );
    }
 }
 
+void Player_update2 ( OBJECT *obj )
+{
+   if ( gv->key_UP2 )
+   {
+      obj->pos[YPOS] += thrust_up[YPOS] * gv->fadjust;
+      Object_update_zone ( obj );
+      if ( obj->pos[YPOS] > MAX_Y )
+         obj->pos[YPOS] = MAX_Y;
+   }
 
-void Player_blink ( OBJECT *obj, MAT r )
+   if ( gv->key_DOWN2 )
+   {
+      obj->pos[YPOS] += thrust_down[YPOS] * gv->fadjust;
+      Object_update_zone ( obj );
+      if ( obj->pos[YPOS] < MIN_Y )
+         obj->pos[YPOS] = MIN_Y;
+   }
+
+   if ( gv->key_LEFT2 )
+   {
+      obj->pos[XPOS] += thrust_left[XPOS] * gv->fadjust;
+      player2->rot += ROT_Z * gv->fadjust;
+
+      if ( obj->pos[XPOS] < MIN_X )
+         obj->pos[XPOS] = MIN_X;
+
+      if ( player2->rot > MAX_ROT )
+         player2->rot = MAX_ROT;
+   }
+
+   if ( gv->key_RIGHT2 )
+   {
+      obj->pos[XPOS] += thrust_right[XPOS] * gv->fadjust;
+      player2->rot -= ROT_Z * gv->fadjust;
+
+      if ( obj->pos[XPOS] > MAX_X )
+         obj->pos[XPOS] = MAX_X;
+
+      if ( player2->rot < -MAX_ROT )
+         player2->rot = -MAX_ROT;
+   }
+
+   if ( (gv->key_LEFT2 == FALSE) && (gv->key_RIGHT2 == FALSE) )
+   {
+      /* please re-do this major hackyness */
+      if ( ( player2->rot < -0.03 ) || \
+           ( player2->rot > 0.03 ) )
+      {
+         if ( player2->rot < -0.03 )
+         {
+            player2->rot += ROT_Z * gv->fadjust;
+            if ( player2->rot > 0.0 )
+               player2->rot = 0.0;
+         }
+         else
+         {
+            if ( player2->rot > 0.03 )
+            {
+               player2->rot -= ROT_Z * gv->fadjust;
+               if ( player2->rot < 0.0 )
+                  player2->rot = 0.0;
+            }
+         }
+      }
+   }
+
+   if ( gv->key_FIRE2 && !pm2->active )
+   {
+      pm2->active      = TRUE;
+      pm2->zone        = obj->zone;
+      pm2->zheight     = obj->zheight;
+      Vector_init ( pm2->pos );
+      Vector_copy ( obj->pos, pm2->pos );
+      Vector_copy ( obj->pos, pm2->old_pos );
+      Vector_addd ( pm2->pos, missile_offset );
+   }
+}
+
+void Player_blink1 ( OBJECT *obj, MAT r1, MAT r2 )
 {
    static long blink = 0;
    static int color = 0;
@@ -178,114 +285,598 @@ void Player_blink ( OBJECT *obj, MAT r )
    {
       blink -= 250;
       color++;
-      if ( color == 3 )
+      if ( color >= 3 )
          color = 0;
    }
 
-   pcolor = RED - ( color * 15 );
+   pcolor1 = RED - color * 15;
 
    obj->frame += gv->msec;
    if ( obj->frame > PLAYER_BLINK_TIME )
    {
-      pcolor = RED;
-      gv->pblinking = FALSE;
-      Object_set_drawfn ( obj, Player_draw );
+      pcolor1 = RED;
+      gv->pblink1 = FALSE;
+      Object_set_drawfn ( obj, Player_draw1 );
    }
 
-   Player_draw ( obj, r );
+   Player_draw1 ( obj, r1, r2 );
 }
 
-void Player_draw ( OBJECT *obj, MAT r )
+void Player_blink2 ( OBJECT *obj, MAT r1, MAT r2 )
 {
-   int p[32];
+   static long blink = 0;
+   static int color = 0;
+
+   blink += gv->msec;
+   if ( blink > 50 )
+   {
+      blink -= 250;
+      color++;
+      if ( color >= 3 )
+         color = 0;
+   }
+
+   pcolor2 = BLUE - color * 15;
+
+   obj->frame += gv->msec;
+   if ( obj->frame > PLAYER_BLINK_TIME )
+   {
+      pcolor2 = BLUE;
+      gv->pblink2 = FALSE;
+      Object_set_drawfn ( obj, Player_draw2 );
+   }
+
+   Player_draw2 ( obj, r1, r2 );
+}
+
+static VEC player_vert [16] = { { -5.0f, 0.0f, 15.0f, 1.0f },  /*body*/
+                                { -10.0f, 0.0f, -20.0f, 1.0f },
+                                { 10.0f, 0.0f, -20.0f, 1.0f },
+                                { 5.0f, 0.0f, 15.0f, 1.0f },
+                                { -5.0f, 10.0f, -18.0f, 1.0f },
+                                { 5.0f, 10.0f, -18.0f, 1.0f },
+                                { -5.0f, 0.0f, 20.0f, 1.0f }, /* left e*/
+                                { -10.0f, 0.0f, -15.0f, 1.0f },
+                                { -12.0f, 0.0f, -12.0f, 1.0f },
+                                { -10.0f, 0.0f, 25.0f, 1.0f },
+                                { 5.0f, 0.0f, 20.0f, 1.0f }, /* re */
+                                { 10.0f, 0.0f, -15.0f, 1.0f },
+                                { 12.0f, 0.0f, -12.0f, 1.0f },
+                                { 10.0f, 0.0f, 25.0f, 1.0f },
+                                { -20.0f, -5.0f, 35.0f, 1.0f }, /*lw*/
+                                { 20.0f, -5.0f, 35.0f, 1.0f } }; /*rw*/
+
+static VEC player_vert1 [16] = { { -5.0f, 0.0f, 15.0f, 1.0f },  /*body*/
+                                 { -10.0f, 0.0f, -20.0f, 1.0f },
+                                 { 10.0f, 0.0f, -20.0f, 1.0f },
+                                 { 5.0f, 0.0f, 15.0f, 1.0f },
+                                 { -5.0f, 10.0f, -18.0f, 1.0f },
+                                 { 5.0f, 10.0f, -18.0f, 1.0f },
+                                 { -5.0f, 0.0f, 20.0f, 1.0f }, /* left e*/
+                                 { -10.0f, 0.0f, -15.0f, 1.0f },
+                                 { -12.0f, 0.0f, -12.0f, 1.0f },
+                                 { -10.0f, 0.0f, 25.0f, 1.0f },
+                                 { 5.0f, 0.0f, 20.0f, 1.0f }, /* re */
+                                 { 10.0f, 0.0f, -15.0f, 1.0f },
+                                 { 12.0f, 0.0f, -12.0f, 1.0f },
+                                 { 10.0f, 0.0f, 25.0f, 1.0f },
+                                 { -20.0f, -5.0f, 35.0f, 1.0f }, /*lw*/
+                                 { 20.0f, -5.0f, 35.0f, 1.0f } }; /*rw*/
+
+static VEC cross_hairs[4] = { { -15.0f, 0.0f, 0.0f, 1.0f },
+                              { 0.0f, 15.0f, 0.0f, 1.0f },
+                              { 15.0f, 0.0f, 0.0f, 1.0f },
+                              { 0.0f, -15.0f, 0.0f, 1.0f } };
+
+void Player_draw1 ( OBJECT *obj, MAT r1, MAT r2 )
+{
+   int pcol, p1[32], p2[32];
+   int i, x1R, y1B, x2L, y2T;
    VEC tmp[16], rot_vert[16];
    MAT tmp_mat, rot_mat;
    VEC offset;
 
+   x1R = gv->x1r;
+   y1B = gv->y1b;
+   x2L = gv->x2l;
+   y2T = gv->y2t;
 
-   VEC player_vert [16] = { { -5.0f, 0.0f, 15.0f, 1.0f },  /*body*/
-                             { -10.0f, 0.0f, -20.0f, 1.0f },
-                             { 10.0f, 0.0f, -20.0f, 1.0f },
-                             { 5.0f, 0.0f, 15.0f, 1.0f },
-                             { -5.0f, 10.0f, -18.0f, 1.0f },
-                             { 5.0f, 10.0f, -18.0f, 1.0f }, 
-                             { -5.0f, 0.0f, 20.0f, 1.0f }, /* left e*/
-                             { -10.0f, 0.0f, -15.0f, 1.0f },
-                             { -12.0f, 0.0f, -12.0f, 1.0f },
-                             { -10.0f, 0.0f, 25.0f, 1.0f }, 
-                             { 5.0f, 0.0f, 20.0f, 1.0f }, /* re */
-                             { 10.0f, 0.0f, -15.0f, 1.0f },
-                             { 12.0f, 0.0f, -12.0f, 1.0f },
-                             { 10.0f, 0.0f, 25.0f, 1.0f },
-                             { -20.0f, -5.0f, 35.0f, 1.0f }, /*lw*/
-                             { 20.0f, -5.0f, 35.0f, 1.0f } }; /*rw*/
+   pcol = pcolor1;
 
+   if ( gv->pduel )
+   {
+      Matrix_vec_mult ( r2, obj->pos, tmp[0] );
+      Matrix_copy ( r2, tmp_mat );
+      Matrix_set_trans ( tmp_mat, tmp[0] );
 
-
-   VEC cross_hairs[4] = { { -15.0f, 0.0f, 0.0f, 1.0f },
-                           { 0.0f, 15.0f, 0.0f, 1.0f },
-                           { 15.0f, 0.0f, 0.0f, 1.0f },
-                           { 0.0f, -15.0f, 0.0f, 1.0f } };
-
-   Matrix_vec_mult ( r, obj->pos, tmp[0] );
-   Matrix_copy ( r, tmp_mat );
+      Matrix_z_rot ( rot_mat, player1->rot );
+      Matrix_vec_multn ( rot_mat, player_vert, rot_vert, 16 );
+      Matrix_vec_multn ( tmp_mat, rot_vert, tmp, 16 );
+      Camera_project_points ( tmp, p2, 16 );
+   }
+   Matrix_vec_mult ( r1, obj->pos, tmp[0] );
+   Matrix_copy ( r1, tmp_mat );
    Matrix_set_trans ( tmp_mat, tmp[0] );
 
-   Matrix_z_rot ( rot_mat, player->rot );
+   Matrix_z_rot ( rot_mat, player1->rot );
    Matrix_vec_multn ( rot_mat, player_vert, rot_vert, 16 );
    Matrix_vec_multn ( tmp_mat, rot_vert, tmp, 16 );
-   Camera_project_points ( tmp, p, 16 );
+   Camera_project_points ( tmp, p1, 16 );
 
+   if ( gv->pduel )
+   {
+      if ( gv->phorizontal )
+      {
+         for ( i = 1; i < 32; i += 2 )
+         {
+            p1[i] /= 2;
+            p2[i] = p2[i] / 2 + y2T;
+         }
+      }
+      else if ( gv->pvertical )
+      {
+         for ( i = 0; i < 32; i += 2 )
+         {
+            p1[i] /= 2;
+            p2[i] = p2[i] / 2 + x2L;
+         }
+      }
+      else
+      {
+         for ( i = 0; i < 32; i += 2 )
+         {
+            p1[i] /= 2;
+            p2[i] = p2[i] / 2 + x2L;
+         }
+         for ( i = 1; i < 32; i += 2 )
+         {
+            p1[i] /= 2;
+            p2[i] = p2[i] / 2 + y2T;
+         }
+      }
+
+      /* body bottom */
+      if ( p2[0] >= x2L && p2[2] >= x2L && \
+           p2[1] >= y2T && p2[3] >= y2T )
+         Draw_line ( p2[0], p2[1], p2[2], p2[3], pcol );
+      if ( p2[2] >= x2L && p2[4] >= x2L && \
+           p2[3] >= y2T && p2[5] >= y2T )
+         Draw_line ( p2[2], p2[3], p2[4], p2[5], pcol );
+      if ( p2[4] >= x2L && p2[6] >= x2L && \
+           p2[5] >= y2T && p2[7] >= y2T )
+         Draw_line ( p2[4], p2[5], p2[6], p2[7], pcol );
+      if ( p2[6] >= x2L && p2[0] >= x2L && \
+           p2[7] >= y2T && p2[1] >= y2T )
+         Draw_line ( p2[6], p2[7], p2[0], p2[1], pcol );
+
+      /* body top */
+      if ( p2[0] >= x2L && p2[8] >= x2L && \
+           p2[1] >= y2T && p2[9] >= y2T )
+         Draw_line ( p2[0], p2[1], p2[8], p2[9], pcol );
+      if ( p2[2] >= x2L && p2[2] >= x2L && \
+           p2[3] >= y2T && p2[3] >= y2T )
+         Draw_line ( p2[8], p2[9], p2[2], p2[3], pcol );
+      if ( p2[4] >= x2L && p2[10] >= x2L && \
+           p2[5] >= y2T && p2[11] >= y2T )
+         Draw_line ( p2[4], p2[5], p2[10], p2[11], pcol );
+      if ( p2[10] >= x2L && p2[6] >= x2L && \
+           p2[11] >= y2T && p2[7] >= y2T )
+         Draw_line ( p2[10], p2[11], p2[6], p2[7], pcol );
+      if ( p2[8] >= x2L && p2[10] >= x2L && \
+           p2[9] >= y2T && p2[11] >= y2T )
+         Draw_line ( p2[8], p2[9], p2[10], p2[11], pcol );
+
+      /* left e */
+      if ( p2[12] >= x2L && p2[14] >= x2L && \
+           p2[13] >= y2T && p2[15] >= y2T )
+         Draw_line ( p2[12], p2[13], p2[14], p2[15], pcol );
+      if ( p2[14] >= x2L && p2[16] >= x2L && \
+           p2[15] >= y2T && p2[17] >= y2T )
+         Draw_line ( p2[14], p2[15], p2[16], p2[17], pcol );
+      if ( p2[16] >= x2L && p2[18] >= x2L && \
+           p2[17] >= y2T && p2[19] >= y2T )
+         Draw_line ( p2[16], p2[17], p2[18], p2[19], pcol );
+      if ( p2[18] >= x2L && p2[12] >= x2L && \
+           p2[19] >= y2T && p2[13] >= y2T )
+         Draw_line ( p2[18], p2[19], p2[12], p2[13], pcol );
+
+      /* right e */
+      if ( p2[20] >= x2L && p2[22] >= x2L && \
+           p2[21] >= y2T && p2[23] >= y2T )
+         Draw_line ( p2[20], p2[21], p2[22], p2[23], pcol );
+      if ( p2[22] >= x2L && p2[24] >= x2L && \
+           p2[23] >= y2T && p2[25] >= y2T )
+         Draw_line ( p2[22], p2[23], p2[24], p2[25], pcol );
+      if ( p2[24] >= x2L && p2[26] >= x2L && \
+           p2[25] >= y2T && p2[27] >= y2T )
+         Draw_line ( p2[24], p2[25], p2[26], p2[27], pcol );
+      if ( p2[26] >= x2L && p2[20] >= x2L && \
+           p2[27] >= y2T && p2[21] >= y2T )
+         Draw_line ( p2[26], p2[27], p2[20], p2[21], pcol );
+
+      /* left wing */
+      if ( p2[28] >= x2L && p2[16] >= x2L && \
+           p2[29] >= y2T && p2[17] >= y2T )
+         Draw_line ( p2[28], p2[29], p2[16], p2[17], pcol );
+      if ( p2[28] >= x2L && p2[18] >= x2L && \
+           p2[29] >= y2T && p2[19] >= y2T )
+         Draw_line ( p2[28], p2[29], p2[18], p2[19], pcol );
+
+      /* right wing */
+      if ( p2[30] >= x2L && p2[24] >= x2L && \
+           p2[31] >= y2T && p2[25] >= y2T )
+         Draw_line ( p2[30], p2[31], p2[24], p2[25], pcol );
+      if ( p2[30] >= x2L && p2[26] >= x2L && \
+           p2[31] >= y2T && p2[27] >= y2T )
+         Draw_line ( p2[30], p2[31], p2[26], p2[27], pcol );
+   }
    /* body bottom */
-   Draw_line ( p[0], p[1], p[2], p[3], pcolor );
-   Draw_line ( p[2], p[3], p[4], p[5], pcolor );
-   Draw_line ( p[4], p[5], p[6], p[7], pcolor );
-   Draw_line ( p[6], p[7], p[0], p[1], pcolor );
-   
-   /* body top */
-   Draw_line ( p[0], p[1], p[8], p[9], pcolor );
-   Draw_line ( p[8], p[9], p[2], p[3], pcolor );
-   Draw_line ( p[4], p[5], p[10], p[11], pcolor );
-   Draw_line ( p[10], p[11], p[6], p[7], pcolor );
-   Draw_line ( p[8], p[9], p[10], p[11], pcolor );
+   if ( p1[0] < x1R && p1[2] < x1R && \
+        p1[1] < y1B && p1[3] < y1B )
+      Draw_line ( p1[0], p1[1], p1[2], p1[3], pcol );
+   if ( p1[2] < x1R && p1[4] < x1R && \
+        p1[3] < y1B && p1[5] < y1B )
+      Draw_line ( p1[2], p1[3], p1[4], p1[5], pcol );
+   if ( p1[4] < x1R && p1[6] < x1R && \
+        p1[5] < y1B && p1[7] < y1B )
+      Draw_line ( p1[4], p1[5], p1[6], p1[7], pcol );
+   if ( p1[6] < x1R && p1[0] < x1R && \
+        p1[7] < y1B && p1[1] < y1B )
+      Draw_line ( p1[6], p1[7], p1[0], p1[1], pcol );
 
-   /* left e*/
-   Draw_line ( p[12], p[13], p[14], p[15], pcolor );
-   Draw_line ( p[14], p[15], p[16], p[17], pcolor );
-   Draw_line ( p[16], p[17], p[18], p[19], pcolor );
-   Draw_line ( p[18], p[19], p[12], p[13], pcolor );
+   /* body top */
+   if ( p1[0] < x1R && p1[8] < x1R && \
+        p1[1] < y1B && p1[9] < y1B )
+      Draw_line ( p1[0], p1[1], p1[8], p1[9], pcol );
+   if ( p1[8] < x1R && p1[2] < x1R && \
+        p1[9] < y1B && p1[3] < y1B )
+      Draw_line ( p1[8], p1[9], p1[2], p1[3], pcol );
+   if ( p1[4] < x1R && p1[10] < x1R && \
+        p1[5] < y1B && p1[11] < y1B )
+      Draw_line ( p1[4], p1[5], p1[10], p1[11], pcol );
+   if ( p1[10] < x1R && p1[6] < x1R && \
+        p1[11] < y1B && p1[7] < y1B )
+      Draw_line ( p1[10], p1[11], p1[6], p1[7], pcol );
+   if ( p1[8] < x1R && p1[10] < x1R && \
+        p1[9] < y1B && p1[11] < y1B )
+      Draw_line ( p1[8], p1[9], p1[10], p1[11], pcol );
+
+   /* left e */
+   if ( p1[12] < x1R && p1[14] < x1R && \
+        p1[13] < y1B && p1[15] < y1B )
+      Draw_line ( p1[12], p1[13], p1[14], p1[15], pcol );
+   if ( p1[14] < x1R && p1[16] < x1R && \
+        p1[15] < y1B && p1[17] < y1B )
+      Draw_line ( p1[14], p1[15], p1[16], p1[17], pcol );
+   if ( p1[16] < x1R && p1[18] < x1R && \
+        p1[17] < y1B && p1[19] < y1B )
+      Draw_line ( p1[16], p1[17], p1[18], p1[19], pcol );
+   if ( p1[18] < x1R && p1[12] < x1R && \
+        p1[19] < y1B && p1[13] < y1B )
+      Draw_line ( p1[18], p1[19], p1[12], p1[13], pcol );
 
    /* right e */
-   Draw_line ( p[20], p[21], p[22], p[23], pcolor );
-   Draw_line ( p[22], p[23], p[24], p[25], pcolor );
-   Draw_line ( p[24], p[25], p[26], p[27], pcolor );
-   Draw_line ( p[26], p[27], p[20], p[21], pcolor );
+   if ( p1[20] < x1R && p1[22] < x1R && \
+        p1[21] < y1B && p1[23] < y1B )
+      Draw_line ( p1[20], p1[21], p1[22], p1[23], pcol );
+   if ( p1[22] < x1R && p1[24] < x1R && \
+        p1[23] < y1B && p1[25] < y1B )
+      Draw_line ( p1[22], p1[23], p1[24], p1[25], pcol );
+   if ( p1[24] < x1R && p1[26] < x1R && \
+        p1[25] < y1B && p1[27] < y1B )
+      Draw_line ( p1[24], p1[25], p1[26], p1[27], pcol );
+   if ( p1[26] < x1R && p1[20] < x1R && \
+        p1[27] < y1B && p1[21] < y1B )
+      Draw_line ( p1[26], p1[27], p1[20], p1[21], pcol );
 
    /* left wing */
-   Draw_line ( p[28], p[29], p[16], p[17], pcolor );
-   Draw_line ( p[28], p[29], p[18], p[19], pcolor );
+   if ( p1[28] < x1R && p1[16] < x1R && \
+        p1[29] < y1B && p1[17] < y1B )
+      Draw_line ( p1[28], p1[29], p1[16], p1[17], pcol );
+   if ( p1[28] < x1R && p1[18] < x1R && \
+        p1[29] < y1B && p1[19] < y1B )
+      Draw_line ( p1[28], p1[29], p1[18], p1[19], pcol );
 
    /* right wing */
-   Draw_line ( p[30], p[31], p[24], p[25], pcolor );
-   Draw_line ( p[30], p[31], p[26], p[27], pcolor );
+   if ( p1[30] < x1R && p1[24] < x1R && \
+        p1[31] < y1B && p1[25] < y1B )
+      Draw_line ( p1[30], p1[31], p1[24], p1[25], pcol );
+   if ( p1[30] < x1R && p1[26] < x1R && \
+        p1[31] < y1B && p1[27] < y1B )
+      Draw_line ( p1[30], p1[31], p1[26], p1[27], pcol );
 
-  /* update cross-hairs */ 
+  /* update cross-hairs */
    Vector_copy ( obj->pos, tmp[0] );
    Vector_init ( offset );
    offset[ZPOS] = -((gv->formation_zone * 100.0f) + 50.0f);
-   
+
    Vector_addd ( tmp[0], offset );
-   Matrix_vec_mult ( r, tmp[0], tmp[1] );
-   Matrix_copy ( r, tmp_mat );
+   Matrix_vec_mult ( r1, tmp[0], tmp[1] );
+   Matrix_copy ( r1, tmp_mat );
    Matrix_set_trans ( tmp_mat, tmp[1] );
 
    Matrix_vec_multn ( rot_mat, cross_hairs, rot_vert, 4 );
    Matrix_vec_multn ( tmp_mat, rot_vert, tmp, 4 );
-   Camera_project_points ( tmp, p, 4 );
-   Draw_line ( p[0], p[1], p[2], p[3], WHITE );
-   Draw_line ( p[2], p[3], p[4], p[5], WHITE );
-   Draw_line ( p[4], p[5], p[6], p[7], WHITE );
-   Draw_line ( p[6], p[7], p[0], p[1], WHITE );
+   Camera_project_points ( tmp, p1, 4 );
+
+   if ( gv->pduel )
+   {
+      if ( gv->phorizontal )
+      {
+         for ( i = 1; i < 8; i += 2 )
+            p1[i] /= 2;
+      }
+      else if ( gv->pvertical )
+      {
+         for ( i = 0; i < 8; i += 2 )
+            p1[i] /= 2;
+      }
+      else
+      {
+         for ( i = 0; i < 8; i++ )
+            p1[i] /= 2;
+      }
+   }
+
+   if ( p1[0] < x1R && p1[2] < x1R && \
+        p1[1] < y1B && p1[3] < y1B )
+      Draw_line ( p1[0], p1[1], p1[2], p1[3], WHITE );
+   if ( p1[2] < x1R && p1[4] < x1R && \
+        p1[3] < y1B && p1[5] < y1B )
+      Draw_line ( p1[2], p1[3], p1[4], p1[5], WHITE );
+   if ( p1[4] < x1R && p1[6] < x1R && \
+        p1[5] < y1B && p1[7] < y1B )
+      Draw_line ( p1[4], p1[5], p1[6], p1[7], WHITE );
+   if ( p1[6] < x1R && p1[0] < x1R && \
+        p1[7] < y1B && p1[1] < y1B )
+      Draw_line ( p1[6], p1[7], p1[0], p1[1], WHITE );
+}
+
+void Player_draw2 ( OBJECT *obj, MAT r1, MAT r2 )
+{
+   int pcol, p1[32], p2[32];
+   int i, x1R, y1B, x2L, y2T;
+   VEC tmp[16], rot_vert[16];
+   MAT tmp_mat, rot_mat;
+   VEC offset;
+
+   x1R = gv->x1r;
+   y1B = gv->y1b;
+   x2L = gv->x2l;
+   y2T = gv->y2t;
+
+   pcol = pcolor2;
+
+   Matrix_vec_mult ( r1, obj->pos, tmp[0] );
+   Matrix_copy ( r1, tmp_mat );
+   Matrix_set_trans ( tmp_mat, tmp[0] );
+
+   Matrix_z_rot ( rot_mat, player2->rot );
+   Matrix_vec_multn ( rot_mat, player_vert, rot_vert, 16 );
+   Matrix_vec_multn ( tmp_mat, rot_vert, tmp, 16 );
+   Camera_project_points ( tmp, p1, 16 );
+
+   Matrix_vec_mult ( r2, obj->pos, tmp[0] );
+   Matrix_copy ( r2, tmp_mat );
+   Matrix_set_trans ( tmp_mat, tmp[0] );
+
+   Matrix_z_rot ( rot_mat, player2->rot );
+   Matrix_vec_multn ( rot_mat, player_vert, rot_vert, 16 );
+   Matrix_vec_multn ( tmp_mat, rot_vert, tmp, 16 );
+   Camera_project_points ( tmp, p2, 16 );
+
+   if ( gv->phorizontal )
+   {
+      for ( i = 1; i < 32; i += 2 )
+      {
+         p1[i] /= 2;
+         p2[i] = p2[i] / 2 + y2T;
+      }
+   }
+   else if ( gv->pvertical )
+   {
+      for ( i = 0; i < 32; i += 2 )
+      {
+         p1[i] /= 2;
+         p2[i] = p2[i] / 2 + x2L;
+      }
+   }
+   else
+   {
+      for ( i = 0; i < 32; i += 2 )
+      {
+         p1[i] /= 2;
+         p2[i] = p2[i] / 2 + x2L;
+      }
+      for ( i = 1; i < 32; i += 2 )
+      {
+         p1[i] /= 2;
+         p2[i] = p2[i] / 2 + y2T;
+      }
+   }
+
+   /* body bottom */
+   if ( p1[0] < x1R && p1[2] < x1R && \
+        p1[1] < y1B && p1[3] < y1B )
+      Draw_line ( p1[0], p1[1], p1[2], p1[3], pcol );
+   if ( p1[2] < x1R && p1[4] < x1R && \
+        p1[3] < y1B && p1[5] < y1B )
+      Draw_line ( p1[2], p1[3], p1[4], p1[5], pcol );
+   if ( p1[4] < x1R && p1[6] < x1R && \
+        p1[5] < y1B && p1[7] < y1B )
+      Draw_line ( p1[4], p1[5], p1[6], p1[7], pcol );
+   if ( p1[6] < x1R && p1[0] < x1R && \
+        p1[7] < y1B && p1[1] < y1B )
+      Draw_line ( p1[6], p1[7], p1[0], p1[1], pcol );
+   if ( p2[0] >= x2L && p2[2] >= x2L && \
+        p2[1] >= y2T && p2[3] >= y2T )
+      Draw_line ( p2[0], p2[1], p2[2], p2[3], pcol );
+   if ( p2[2] >= x2L && p2[4] >= x2L && \
+        p2[3] >= y2T && p2[5] >= y2T )
+      Draw_line ( p2[2], p2[3], p2[4], p2[5], pcol );
+   if ( p2[4] >= x2L && p2[6] >= x2L && \
+        p2[5] >= y2T && p2[7] >= y2T )
+      Draw_line ( p2[4], p2[5], p2[6], p2[7], pcol );
+   if ( p2[6] >= x2L && p2[0] >= x2L && \
+        p2[7] >= y2T && p2[1] >= y2T )
+      Draw_line ( p2[6], p2[7], p2[0], p2[1], pcol );
+
+   /* body top */
+   if ( p1[0] < x1R && p1[8] < x1R && \
+        p1[1] < y1B && p1[9] < y1B )
+      Draw_line ( p1[0], p1[1], p1[8], p1[9], pcol );
+   if ( p1[8] < x1R && p1[2] < x1R && \
+        p1[9] < y1B && p1[3] < y1B )
+      Draw_line ( p1[8], p1[9], p1[2], p1[3], pcol );
+   if ( p1[4] < x1R && p1[10] < x1R && \
+        p1[5] < y1B && p1[11] < y1B )
+      Draw_line ( p1[4], p1[5], p1[10], p1[11], pcol );
+   if ( p1[10] < x1R && p1[6] < x1R && \
+        p1[11] < y1B && p1[7] < y1B )
+      Draw_line ( p1[10], p1[11], p1[6], p1[7], pcol );
+   if ( p1[8] < x1R && p1[10] < x1R && \
+        p1[9] < y1B && p1[11] < y1B )
+      Draw_line ( p1[8], p1[9], p1[10], p1[11], pcol );
+   if ( p2[0] >= x2L && p2[8] >= x2L && \
+        p2[1] >= y2T && p2[9] >= y2T )
+      Draw_line ( p2[0], p2[1], p2[8], p2[9], pcol );
+   if ( p2[8] >= x2L && p2[2] >= x2L && \
+        p2[9] >= y2T && p2[3] >= y2T )
+      Draw_line ( p2[8], p2[9], p2[2], p2[3], pcol );
+   if ( p2[4] >= x2L && p2[10] >= x2L && \
+        p2[5] >= y2T && p2[11] >= y2T )
+      Draw_line ( p2[4], p2[5], p2[10], p2[11], pcol );
+   if ( p2[10] >= x2L && p2[6] >= x2L && \
+        p2[11] >= y2T && p2[7] >= y2T )
+      Draw_line ( p2[10], p2[11], p2[6], p2[7], pcol );
+   if ( p2[8] >= x2L && p2[10] >= x2L && \
+        p2[9] >= y2T && p2[11] >= y2T )
+      Draw_line ( p2[8], p2[9], p2[10], p2[11], pcol );
+
+   /* left e */
+   if ( p1[12] < x1R && p1[14] < x1R && \
+        p1[13] < y1B && p1[15] < y1B )
+      Draw_line ( p1[12], p1[13], p1[14], p1[15], pcol );
+   if ( p1[14] < x1R && p1[16] < x1R && \
+        p1[15] < y1B && p1[17] < y1B )
+      Draw_line ( p1[14], p1[15], p1[16], p1[17], pcol );
+   if ( p1[16] < x1R && p1[18] < x1R && \
+        p1[17] < y1B && p1[19] < y1B )
+      Draw_line ( p1[16], p1[17], p1[18], p1[19], pcol );
+   if ( p1[18] < x1R && p1[12] < x1R && \
+        p1[19] < y1B && p1[13] < y1B )
+      Draw_line ( p1[18], p1[19], p1[12], p1[13], pcol );
+   if ( p2[12] >= x2L && p2[14] >= x2L && \
+        p2[13] >= y2T && p2[15] >= y2T )
+      Draw_line ( p2[12], p2[13], p2[14], p2[15], pcol );
+   if ( p2[14] >= x2L && p2[16] >= x2L && \
+        p2[15] >= y2T && p2[17] >= y2T )
+      Draw_line ( p2[14], p2[15], p2[16], p2[17], pcol );
+   if ( p2[16] >= x2L && p2[18] >= x2L && \
+        p2[17] >= y2T && p2[19] >= y2T )
+      Draw_line ( p2[16], p2[17], p2[18], p2[19], pcol );
+   if ( p2[18] >= x2L && p2[12] >= x2L && \
+        p2[19] >= y2T && p2[13] >= y2T )
+      Draw_line ( p2[18], p2[19], p2[12], p2[13], pcol );
+
+   /* right e */
+   if ( p1[20] < x1R && p1[22] < x1R && \
+        p1[21] < y1B && p1[23] < y1B )
+      Draw_line ( p1[20], p1[21], p1[22], p1[23], pcol );
+   if ( p1[22] < x1R && p1[24] < x1R && \
+        p1[23] < y1B && p1[25] < y1B )
+      Draw_line ( p1[22], p1[23], p1[24], p1[25], pcol );
+   if ( p1[24] < x1R && p1[26] < x1R && \
+        p1[25] < y1B && p1[27] < y1B )
+      Draw_line ( p1[24], p1[25], p1[26], p1[27], pcol );
+   if ( p1[26] < x1R && p1[20] < x1R && \
+        p1[27] < y1B && p1[21] < y1B )
+      Draw_line ( p1[26], p1[27], p1[20], p1[21], pcol );
+   if ( p2[0] >= x2L && p2[2] >= x2L && \
+        p2[1] >= y2T && p2[3] >= y2T )
+      Draw_line ( p2[20], p2[21], p2[22], p2[23], pcol );
+   if ( p2[22] >= x2L && p2[24] >= x2L && \
+        p2[23] >= y2T && p2[25] >= y2T )
+      Draw_line ( p2[22], p2[23], p2[24], p2[25], pcol );
+   if ( p2[24] >= x2L && p2[26] >= x2L && \
+        p2[25] >= y2T && p2[27] >= y2T )
+      Draw_line ( p2[24], p2[25], p2[26], p2[27], pcol );
+   if ( p2[26] >= x2L && p2[20] >= x2L && \
+        p2[27] >= y2T && p2[21] >= y2T )
+      Draw_line ( p2[26], p2[27], p2[20], p2[21], pcol );
+
+   /* left wing */
+   if ( p1[28] < x1R && p1[16] < x1R && \
+        p1[29] < y1B && p1[17] < y1B )
+      Draw_line ( p1[28], p1[29], p1[16], p1[17], pcol );
+   if ( p1[28] < x1R && p1[18] < x1R && \
+        p1[29] < y1B && p1[19] < y1B )
+      Draw_line ( p1[28], p1[29], p1[18], p1[19], pcol );
+   if ( p2[28] >= x2L && p2[16] >= x2L && \
+        p2[29] >= y2T && p2[17] >= y2T )
+      Draw_line ( p2[28], p2[29], p2[16], p2[17], pcol );
+   if ( p2[28] >= x2L && p2[18] >= x2L && \
+        p2[29] >= y2T && p2[19] >= y2T )
+      Draw_line ( p2[28], p2[29], p2[18], p2[19], pcol );
+
+   /* right wing */
+   if ( p1[30] < x1R && p1[24] < x1R && \
+        p1[31] < y1B && p1[25] < y1B )
+      Draw_line ( p1[30], p1[31], p1[24], p1[25], pcol );
+   if ( p1[30] < x1R && p1[26] < x1R && \
+        p1[31] < y1B && p1[27] < y1B )
+      Draw_line ( p1[30], p1[31], p1[26], p1[27], pcol );
+   if ( p2[30] >= x2L && p2[24] >= x2L && \
+        p2[31] >= y2T && p2[25] >= y2T )
+      Draw_line ( p2[30], p2[31], p2[24], p2[25], pcol );
+   if ( p2[30] >= x2L && p2[26] >= x2L && \
+        p2[31] >= y2T && p2[27] >= y2T )
+      Draw_line ( p2[30], p2[31], p2[26], p2[27], pcol );
+
+  /* update cross-hairs */
+   Vector_copy ( obj->pos, tmp[0] );
+   Vector_init ( offset );
+   offset[ZPOS] = -((gv->formation_zone * 100.0f) + 50.0f);
+
+   Vector_addd ( tmp[0], offset );
+   Matrix_vec_mult ( r2, tmp[0], tmp[1] );
+   Matrix_copy ( r2, tmp_mat );
+   Matrix_set_trans ( tmp_mat, tmp[1] );
+
+   Matrix_vec_multn ( rot_mat, cross_hairs, rot_vert, 4 );
+   Matrix_vec_multn ( tmp_mat, rot_vert, tmp, 4 );
+   Camera_project_points ( tmp, p2, 4 );
+
+   if ( gv->phorizontal )
+   {
+      for ( i = 1; i < 8; i += 2 )
+         p2[i] = p2[i] / 2 + y2T;
+   }
+   else if ( gv->pvertical )
+   {
+      for ( i = 0; i < 8; i += 2 )
+         p2[i] = p2[i] / 2 + x2L;
+   }
+   else
+   {
+      for ( i = 0; i < 8; i += 2 )
+         p2[i] = p2[i] / 2 + x2L;
+      for ( i = 1; i < 8; i += 2 )
+         p2[i] = p2[i] / 2 + y2T;
+   }
+
+   if ( p2[0] >= x2L && p2[2] >= x2L && \
+        p2[1] >= y2T && p2[3] >= y2T )
+      Draw_line ( p2[0], p2[1], p2[2], p2[3], WHITE );
+   if ( p2[2] >= x2L && p2[4] >= x2L && \
+        p2[3] >= y2T && p2[5] >= y2T )
+      Draw_line ( p2[2], p2[3], p2[4], p2[5], WHITE );
+   if ( p2[4] >= x2L && p2[6] >= x2L && \
+        p2[5] >= y2T && p2[7] >= y2T )
+      Draw_line ( p2[4], p2[5], p2[6], p2[7], WHITE );
+   if ( p2[6] >= x2L && p2[0] >= x2L && \
+        p2[7] >= y2T && p2[1] >= y2T )
+      Draw_line ( p2[6], p2[7], p2[0], p2[1], WHITE );
 }
 
 /*================================================================*/
@@ -293,36 +884,187 @@ void Player_draw ( OBJECT *obj, MAT r )
 void Player_missile_update ( OBJECT *obj )
 {
    Vector_copy ( obj->pos, obj->old_pos );
-   obj->pos[ZPOS] += missile_thrust[ZPOS] * gv->fadjust; 
+   obj->pos[ZPOS] += missile_thrust[ZPOS] * gv->fadjust;
    Object_update_zone ( obj );
 
    if ( obj->zone > ZONE_9 )
       obj->active = FALSE;
 }
 
-void Player_missile_draw ( OBJECT *obj, MAT r )
+static VEC missile_vert[4] = { {-10.0f, 0.0f, -5.0f, 1.0f},
+                               {0.0f, 0.0f, -10.0f, 1.0f},
+                               {10.0f, 0.0f, -5.0f, 1.0f},
+                               {0.0f, 0.0f, 20.0f, 1.0f} };
+
+void Player_missile_draw1 ( OBJECT *obj, MAT r1, MAT r2 )
 {
    VEC tmp[4];
    MAT tmp_mat;
-   int p[8];
+   int i, x1R, y1B, x2L, y2T;
+   int p1[8], p2[8];
 
-   VEC missile_vert[4] = { {-10.0f, 0.0f, -5.0f, 1.0f},
-                            {0.0f, 0.0f, -10.0f, 1.0f},
-                            {10.0f, 0.0f, -5.0f, 1.0f},
-                            {0.0f, 0.0f, 20.0f, 1.0f}};
+   x1R = gv->x1r;
+   y1B = gv->y1b;
+   x2L = gv->x2l;
+   y2T = gv->y2t;
 
-   Matrix_vec_mult ( r, obj->pos, tmp[0] );
-   Matrix_copy ( r, tmp_mat );
+   Matrix_vec_mult ( r1, obj->pos, tmp[0] );
+   Matrix_copy ( r1, tmp_mat );
    Matrix_set_trans ( tmp_mat, tmp[0] );
 
    Matrix_vec_multn ( tmp_mat, missile_vert, tmp, 4 );
 
-   Camera_project_points ( tmp, p, 4 );
+   Camera_project_points ( tmp, p1, 4 );
 
-   Draw_line ( p[0], p[1], p[2], p[3], YELLOW );
-   Draw_line ( p[2], p[3], p[4], p[5], YELLOW );
-   Draw_line ( p[4], p[5], p[6], p[7], YELLOW );
-   Draw_line ( p[6], p[7], p[0], p[1], YELLOW );
+   if ( gv->pduel )
+   {
+      Matrix_vec_mult ( r2, obj->pos, tmp[0] );
+      Matrix_copy ( r2, tmp_mat );
+      Matrix_set_trans ( tmp_mat, tmp[0] );
+
+      Matrix_vec_multn ( tmp_mat, missile_vert, tmp, 4 );
+
+      Camera_project_points ( tmp, p2, 4 );
+
+      if ( gv->phorizontal )
+      {
+         for ( i = 1; i < 8; i += 2 )
+         {
+            p1[i] /= 2;
+            p2[i] = p2[i] / 2 + y2T;
+         }
+      }
+      else if ( gv->pvertical )
+      {
+         for ( i = 0; i < 8; i += 2 )
+         {
+            p1[i] /= 2;
+            p2[i] = p2[i] / 2 + x2L;
+         }
+      }
+      else
+      {
+         for ( i = 0; i < 8; i += 2 )
+         {
+            p1[i] /= 2;
+            p2[i] = p2[i] / 2 + x2L;
+         }
+         for ( i = 1; i < 8; i += 2 )
+         {
+            p1[i] /= 2;
+            p2[i] = p2[i] / 2 + y2T;
+         }
+      }
+      if ( p2[0] >= x2L && p2[2] >= x2L && \
+           p2[1] >= y2T && p2[3] >= y2T )
+         Draw_line ( p2[0], p2[1], p2[2], p2[3], YELLOW );
+      if ( p2[2] >= x2L && p2[4] >= x2L && \
+           p2[3] >= y2T && p2[5] >= y2T )
+         Draw_line ( p2[2], p2[3], p2[4], p2[5], YELLOW );
+      if ( p2[4] >= x2L && p2[6] >= x2L && \
+           p2[5] >= y2T && p2[7] >= y2T )
+         Draw_line ( p2[4], p2[5], p2[6], p2[7], YELLOW );
+      if ( p2[6] >= x2L && p2[0] >= x2L && \
+           p2[7] >= y2T && p2[1] >= y2T )
+         Draw_line ( p2[6], p2[7], p2[0], p2[1], YELLOW );
+   }
+   if ( p1[0] < x1R && p1[2] < x1R && \
+        p1[1] < y1B && p1[3] < y1B )
+      Draw_line ( p1[0], p1[1], p1[2], p1[3], YELLOW );
+   if ( p1[2] < x1R && p1[4] < x1R && \
+        p1[3] < y1B && p1[5] < y1B )
+      Draw_line ( p1[2], p1[3], p1[4], p1[5], YELLOW );
+   if ( p1[4] < x1R && p1[6] < x1R && \
+        p1[5] < y1B && p1[7] < y1B )
+      Draw_line ( p1[4], p1[5], p1[6], p1[7], YELLOW );
+   if ( p1[6] < x1R && p1[0] < x1R && \
+        p1[7] < y1B && p1[1] < y1B )
+      Draw_line ( p1[6], p1[7], p1[0], p1[1], YELLOW );
+}
+
+void Player_missile_draw2 ( OBJECT *obj, MAT r1, MAT r2 )
+{
+   VEC tmp[4];
+   MAT tmp_mat;
+   int i, x1R, y1B, x2L, y2T;
+   int p1[8], p2[8];
+
+   x1R = gv->x1r;
+   y1B = gv->y1b;
+   x2L = gv->x2l;
+   y2T = gv->y2t;
+
+   Matrix_vec_mult ( r1, obj->pos, tmp[0] );
+   Matrix_copy ( r1, tmp_mat );
+   Matrix_set_trans ( tmp_mat, tmp[0] );
+
+   Matrix_vec_multn ( tmp_mat, missile_vert, tmp, 4 );
+
+   Camera_project_points ( tmp, p1, 4 );
+
+   Matrix_vec_mult ( r2, obj->pos, tmp[0] );
+   Matrix_copy ( r2, tmp_mat );
+   Matrix_set_trans ( tmp_mat, tmp[0] );
+
+   Matrix_vec_multn ( tmp_mat, missile_vert, tmp, 4 );
+
+   Camera_project_points ( tmp, p2, 4 );
+
+   if ( gv->phorizontal )
+   {
+      for ( i = 1; i < 8; i += 2 )
+      {
+         p1[i] /= 2;
+         p2[i] = p2[i] / 2 + y2T;
+      }
+   }
+   else if ( gv->pvertical )
+   {
+      for ( i = 0; i < 8; i += 2 )
+      {
+         p1[i] /= 2;
+         p2[i] = p2[i] / 2 + x2L;
+      }
+   }
+   else
+   {
+      for ( i = 0; i < 8; i += 2 )
+      {
+         p1[i] /= 2;
+         p2[i] = p2[i] / 2 + x2L;
+      }
+      for ( i = 1; i < 8; i += 2 )
+      {
+         p1[i] /= 2;
+         p2[i] = p2[i] / 2 + y2T;
+      }
+   }
+
+   if ( p1[0] < x1R && p1[2] < x1R && \
+        p1[1] < y1B && p1[3] < y1B )
+      Draw_line ( p1[0], p1[1], p1[2], p1[3], WHITE );
+   if ( p1[2] < x1R && p1[4] < x1R && \
+        p1[3] < y1B && p1[5] < y1B )
+      Draw_line ( p1[2], p1[3], p1[4], p1[5], WHITE );
+   if ( p1[4] < x1R && p1[6] < x1R && \
+        p1[5] < y1B && p1[7] < y1B )
+      Draw_line ( p1[4], p1[5], p1[6], p1[7], WHITE );
+   if ( p1[6] < x1R && p1[0] < x1R && \
+        p1[7] < y1B && p1[1] < y1B )
+      Draw_line ( p1[6], p1[7], p1[0], p1[1], WHITE );
+
+   if ( p2[0] >= x2L && p2[2] >= x2L && \
+        p2[1] >= y2T && p2[3] >= y2T )
+      Draw_line ( p2[0], p2[1], p2[2], p2[3], WHITE );
+   if ( p2[2] >= x2L && p2[4] >= x2L && \
+        p2[3] >= y2T && p2[5] >= y2T )
+      Draw_line ( p2[2], p2[3], p2[4], p2[5], WHITE );
+   if ( p2[4] >= x2L && p2[6] >= x2L && \
+        p2[5] >= y2T && p2[7] >= y2T )
+      Draw_line ( p2[4], p2[5], p2[6], p2[7], WHITE );
+   if ( p2[6] >= x2L && p2[0] >= x2L && \
+        p2[7] >= y2T && p2[1] >= y2T )
+      Draw_line ( p2[6], p2[7], p2[0], p2[1], WHITE );
 }
 
 /*================================================================*/
