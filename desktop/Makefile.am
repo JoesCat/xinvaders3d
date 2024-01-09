@@ -39,15 +39,17 @@ hicolor32x32dir = $(HICOLORDIR)/32x32/apps
 hicolor64x64dir = $(HICOLORDIR)/64x64/apps
 hicolor128x128dir = $(HICOLORDIR)/128x128/apps
 hicolor256x256dir = $(HICOLORDIR)/256x256/apps
+hicolorscalabledir = $(HICOLORDIR)/scalable/apps
 
 hicolor32x32_DATA = 32x32/xinvaders3d.png
 hicolor64x64_DATA = 64x64/xinvaders3d.png
 hicolor128x128_DATA = 128x128/xinvaders3d.png
 hicolor256x256_DATA = 256x256/xinvaders3d.png
+hicolorscalable_DATA = svg/xinvaders3d.svgz
 
 deskpixsdir = ${datarootdir}/pixmaps
 deskpixs_DATA = 32x32/xinvaders3d.xpm 32x32/xinvaders3d.png
 
 EXTRA_DIST = xinvaders3d.desktop xinvaders3d.appdata.xml xinvaders3d.metainfo.xml xinvaders3d.xml \
 	32x32/xinvaders3d.xpm 32x32/xinvaders3d.png 64x64/xinvaders3d.png 128x128/xinvaders3d.png \
-	256x256/xinvaders3d.png
+	256x256/xinvaders3d.png svg/xinvaders3d.svgz

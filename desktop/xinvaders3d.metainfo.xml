@@ -43,6 +43,8 @@
   <update_contact>digital@joescat.com</update_contact>
   <content_rating type="oars-1.1"/>
   <releases>
+    <release date="2023-07-17" version="1.7.0"/>
+    <release date="2023-07-16" version="1.6.0"/>
     <release date="2023-02-23" version="1.5.0"/>
   </releases>
   <project_license>GPL</project_license>

@@ -37,7 +37,7 @@ EXTRA_DIST = \
 	AUTHORS Changelog main-dos.c main-w.c Makefile.dos Makefile.lin	\
 	README.md README.dos README.win xinvaders3d.jpg xinvaders3d.6	\
 	packaging/xinvaders3d.spec.in packaging/xinvaders3d.spec	\
-	${noinst_HEADERS}
+	m4/ax_check_compile_flag.m4 ${noinst_HEADERS}
 nodist_EXTRA_DATA = .git .github
 
 strip:
