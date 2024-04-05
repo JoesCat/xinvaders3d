@@ -553,7 +553,7 @@ void Game_overlay ( void )
       sprintf ( buffer, "U:%d D:%d L:%d R:%d F:%d - U:%d D:%d L:%d R:%d F:%d", \
                 gv->key_UP1, gv->key_DOWN1, gv->key_LEFT1, gv->key_RIGHT1, \
                 gv->key_FIRE1, gv->key_UP2, gv->key_DOWN2, gv->key_LEFT2, \
-                gv->key_RIGHT2, \ );
+                gv->key_RIGHT2, gv->key_FIRE2 );
    else
       sprintf ( buffer, "U: %d D: %d L: %d R: %d F: %d", \
                 gv->key_UP1, gv->key_DOWN1, gv->key_LEFT1, gv->key_RIGHT1, \

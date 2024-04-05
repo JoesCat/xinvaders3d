@@ -123,6 +123,10 @@ For users who do not have autoconf or automake available, there are release tagp
 The first release was [![v1.5.0]](https://github.com/JoesCat/xinvaders3d/releases/tag/1.5.0)
 Download the -dist- file and expand it so that you can run it.
 
+NOTE: Distros that are planning to follow xinv3d instead of xinvaders3d
+should use "./configure --enable-as-xinv3d" to build the project as xinv3d.
+The xinv3d option was added with v1.8.0
+
 Installing on Linux
 ```sh
 ./configure
@@ -153,4 +157,4 @@ for a default build and install on Linux, run:
 make
 sudo make install
 ```
-The default install location is /usr/local/bin/xinvaders3d and you should also find it in your desktop games menu folder.
+The default install location is /usr/local/bin/xinvaders3d and you should also find icons in your desktop games menu folder.

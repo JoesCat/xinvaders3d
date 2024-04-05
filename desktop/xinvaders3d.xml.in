@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
-   <mime-type type="application/x-xinvaders3d">
-     <comment>XBall script</comment>
+   <mime-type type="application/x-@make_as_xinvaders3d@">
+     <comment>@make_as_xinvaders3d_fn@ scores</comment>
      <generic-icon name="text-x-script"/>
      <sub-class-of type="text/plain"/>
-     <glob pattern="*.xinvaders3d"/>
+     <glob pattern="*.@make_as_xinvaders3d@"/>
    </mime-type>
 </mime-info>

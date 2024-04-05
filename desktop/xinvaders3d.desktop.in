@@ -1,0 +1,14 @@
+[Desktop Entry]
+Version=1.0
+Name=@make_as_xinvaders3d_fn@
+GenericName=X Invaders 3D Game
+Comment=@make_as_xinvaders3d_fn@ is a 3D Vector Graphics Space Invaders clone for X11.
+TryExec=@make_as_xinvaders3d@
+Exec=@make_as_xinvaders3d@
+Icon=@make_as_xinvaders3d@
+StartupNotify=true
+Terminal=false
+Type=Application
+Categories=Game;ArcadeGame;
+MimeType=application/x-@make_as_xinvaders3d@
+Keywords=space;invaders;action;arcade;game;X;window;

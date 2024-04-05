@@ -1,3 +1,9 @@
+xinv3d/xinvaders3d (1.8.0)
+  * Added build option "./configure --enable-as-xinv3d" so that
+    Xinvaders3D builds binary, man file, and desktop as Xinv3D.
+  * Added desktop scalable icon.
+ -- Joe Da Silva <digital@joescat.com>  2024 Apr 05
+
 xinvaders3d (1.7.0)
   * Added player_2, two player duel mode to Xinvaders3d game.
  -- Joe Da Silva <digital@joescat.com>  2023 July 17

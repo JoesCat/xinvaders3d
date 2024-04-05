@@ -5,12 +5,12 @@
 
 AC_PREREQ(2.61)
 
-m4_define([xinvaders3d_version], [1.7.0])
+m4_define([xinvaders3d_version], [1.8.0])
 AC_INIT([xinvaders3d],[xinvaders3d_version],[https://github.com/JoesCat/xinvaders3d/issues],
 	[xinvaders3d],[https://github.com/JoesCat/xinvaders3d])
 AC_CONFIG_SRCDIR([aliens.c])
 AC_CONFIG_MACRO_DIR([m4])
-AC_CANONICAL_SYSTEM
+AC_CANONICAL_TARGET
 AC_CANONICAL_HOST
 AC_CANONICAL_BUILD
 AM_INIT_AUTOMAKE([foreign -Wall])
@@ -74,6 +74,26 @@ if test "x$enable_debugkeyboard" = xyes || test "x$enable_debugkeyboard" = xtrue
   AC_DEFINE([GAME_DEBUG_KEYBOARD],1,[Define if debugging Keyboard using printf.])
 fi
 
+# Enable xinv3d backwards compatibility
+AC_ARG_ENABLE([as_xinv3d],
+  [AS_HELP_STRING([--enable-as-xinv3d],
+    [Install Game as xinv3d for backwards compatibility @<:@default=no@:>@])],
+  [],[enable_as_xinv3d=no])
+make_as_xinv3d=no
+make_as_xinvaders3d=xinvaders3d
+make_as_xinvaders3d_fn=XInvaders3D
+make_as_xinvaders3d_uc=XINVADERS3D
+if test "x$enable_as_xinv3d" = xyes || test "x$enable_as_xinv3d" = xtrue ; then
+  make_as_xinv3d=yes
+  make_as_xinvaders3d=xinv3d
+make_as_xinvaders3d_fn=XInv3D
+  make_as_xinvaders3d_uc=XINV3D
+fi
+AM_CONDITIONAL([WANTXINV3D],[test x$make_as_xinv3d = xyes])
+AC_SUBST([make_as_xinvaders3d])
+AC_SUBST([make_as_xinvaders3d_fn])
+AC_SUBST([make_as_xinvaders3d_uc])
+
 #-------------------------------------------
 # Check for and add usable compiler warnings
 WCFLAGS=""
@@ -90,7 +110,11 @@ AC_LANG_POP
 AC_SUBST([WCFLAGS])
 
 #-------------------------------------------
-AC_CONFIG_FILES([Makefile xinvaders3d.pc desktop/Makefile packaging/xinvaders3d.spec])
+AC_CONFIG_FILES([
+	Makefile xinvaders3d.6 desktop/Makefile
+	desktop/xinvaders3d.desktop desktop/xinvaders3d.appdata.xml
+	desktop/xinvaders3d.xml desktop/xinvaders3d.metainfo.xml
+	packaging/xinvaders3d.spec])
 AC_OUTPUT
 AC_MSG_NOTICE([
 
@@ -104,5 +128,6 @@ Configuration:
   Config CFLAGS		"${CFLAGS}"
   Config WFLAGS		"${WCFLAGS}"
   Config LDFLAGS	"${LDFLAGS}"
+  Build project as	${make_as_xinvaders3d_fn}
 
 ])

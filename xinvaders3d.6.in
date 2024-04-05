@@ -2,7 +2,7 @@
 .\" First parameter, NAME, should be all caps
 .\" Second parameter, SECTION, should be 1-8, maybe w/ subsection
 .\" other parameters are allowed: see man(7), man(1)
-.TH XINVADERS3D 6 "July 17, 2023"
+.TH @make_as_xinvaders3d_uc@ 6 "March 31, 2024"
 .\" Please adjust this date whenever revising the manpage.
 .\"
 .\" Some roff macros, for reference:
@@ -16,11 +16,11 @@
 .\" .sp <n>    insert n+1 empty lines
 .\" for manpage-specific macros, see man(7)
 .SH NAME
-xinvaders3d \- X Invaders 3D
+@make_as_xinvaders3d@ \- X Invaders 3D
 .SH SYNOPSIS
-.B xinvaders3d
+.B @make_as_xinvaders3d@
 .SH DESCRIPTION
-X Invaders 3D is a 3D vector-based space invaders clone for the X
+@make_as_xinvaders3d_fn@ is a 3D vector-based space invaders clone for the X
 Window System.
 
 You are a lone star fighter facing endless waves of space aliens.
@@ -103,10 +103,10 @@ Two Player mode, split horizontal screen
 .I 3
 Two Player mode, split vertical screen
 .SH OPTIONS
-.B xinvaders3d
+.B @make_as_xinvaders3d@
 takes no command-line options.
 .SH AUTHORS
-Xinvaders3D was created (C)2000 by Don Llopis <del23@users.sourceforge.net>,
+@make_as_xinvaders3d_fn@ was created (C)2000 by Don Llopis <del23@users.sourceforge.net>,
 with inspiration from Bill Kendrick: who wrote ICBM3d http://www.newbreedsoftware.com,
 Yuusuke Hashimoto: who wrote XSoldier http://www.surfline.ne.jp/hachi/xsoldier.html,
 and James Eibisch: who wrote a Space Invaders clone in quick-basic http://www.revolver.demon.co.uk/coding/index.html
