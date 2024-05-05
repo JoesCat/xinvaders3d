@@ -161,27 +161,21 @@ void Player_update1 ( OBJECT *obj )
          player1->rot = -MAX_ROT;
    }
 
-   if ( (gv->key_LEFT1 == FALSE) && (gv->key_RIGHT1 == FALSE) )
+   if ( (gv->key_LEFT1 == FALSE) && (gv->key_RIGHT1 == FALSE) && \
+         player1->rot )
    {
-      /* please re-do this major hackyness */
-      if ( ( player1->rot < -0.03 ) ||
-            ( player1->rot > 0.03 ) )
+	   printf("rotated\n");
+      if(player1->rot > 0) 
       {
-         if ( player1->rot < -0.03 )
-         {
-            player1->rot += ROT_Z * gv->fadjust;
-            if ( player1->rot > 0.0 )
-               player1->rot = 0.0;
-         }
-         else
-         {
-            if ( player1->rot > 0.03 )
-            {
-               player1->rot -= ROT_Z * gv->fadjust;
-               if ( player1->rot < 0.0 )
-                  player1->rot = 0.0;
-            }
-         }
+         player1->rot -= ROT_Z * gv->fadjust;
+	 if(player1->rot < 0)
+            player1->rot = 0;
+      } 
+      else 
+      {
+         player1->rot += ROT_Z * gv->fadjust;
+	 if(player1->rot > 0)
+	    player1->rot = 0;
       }
    }
 
@@ -239,27 +233,20 @@ void Player_update2 ( OBJECT *obj )
          player2->rot = -MAX_ROT;
    }
 
-   if ( (gv->key_LEFT2 == FALSE) && (gv->key_RIGHT2 == FALSE) )
+   if ( (gv->key_LEFT2 == FALSE) && (gv->key_RIGHT2 == FALSE) && \
+         player2->rot )
    {
-      /* please re-do this major hackyness */
-      if ( ( player2->rot < -0.03 ) || \
-           ( player2->rot > 0.03 ) )
+      if(player2->rot > 0) 
       {
-         if ( player2->rot < -0.03 )
-         {
-            player2->rot += ROT_Z * gv->fadjust;
-            if ( player2->rot > 0.0 )
-               player2->rot = 0.0;
-         }
-         else
-         {
-            if ( player2->rot > 0.03 )
-            {
-               player2->rot -= ROT_Z * gv->fadjust;
-               if ( player2->rot < 0.0 )
-                  player2->rot = 0.0;
-            }
-         }
+         player2->rot -= ROT_Z * gv->fadjust;
+	 if(player2->rot < 0)
+            player2->rot = 0;
+      } 
+      else 
+      {
+         player2->rot += ROT_Z * gv->fadjust;
+	 if(player2->rot > 0)
+	    player2->rot = 0;
       }
    }
 
