@@ -164,17 +164,17 @@ void Player_update1 ( OBJECT *obj )
    if ( (gv->key_LEFT1 == FALSE) && (gv->key_RIGHT1 == FALSE) && \
          player1->rot )
    {
-      if(player1->rot > 0) 
+      if ( player1->rot > 0 )
       {
          player1->rot -= ROT_Z * gv->fadjust;
-	 if(player1->rot < 0)
+         if ( player1->rot < 0 )
             player1->rot = 0;
-      } 
-      else 
+      }
+      else
       {
          player1->rot += ROT_Z * gv->fadjust;
-	 if(player1->rot > 0)
-	    player1->rot = 0;
+         if ( player1->rot > 0 )
+            player1->rot = 0;
       }
    }
 
@@ -235,17 +235,17 @@ void Player_update2 ( OBJECT *obj )
    if ( (gv->key_LEFT2 == FALSE) && (gv->key_RIGHT2 == FALSE) && \
          player2->rot )
    {
-      if(player2->rot > 0) 
+      if ( player2->rot > 0 )
       {
          player2->rot -= ROT_Z * gv->fadjust;
-	 if(player2->rot < 0)
+         if ( player2->rot < 0 )
             player2->rot = 0;
-      } 
-      else 
+      }
+      else
       {
          player2->rot += ROT_Z * gv->fadjust;
-	 if(player2->rot > 0)
-	    player2->rot = 0;
+         if ( player2->rot > 0 )
+            player2->rot = 0;
       }
    }
 

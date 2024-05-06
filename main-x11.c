@@ -21,6 +21,7 @@
 ------------------------------------------------------------------*/
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
+#include <X11/Xatom.h>
 #include <X11/keysym.h>
 #include <sys/types.h>
 
@@ -57,6 +58,7 @@ XTextProperty wname;
 char          *font_name = "10x20";
 unsigned int  window_width, window_height,
               display_width, display_height;
+Atom wmDeleteMessage;
 
 /*------------------------------------------------------------------
  * main
@@ -137,6 +139,10 @@ int Graphics_init ( unsigned int win_width, unsigned int win_height )
    black_gc = XCreateGC ( display, win, gc_valuemask, &gc_values );
    color_gc = XCreateGC ( display, win, gc_valuemask, &gc_values );
    text_gc  = XCreateGC ( display, win, gc_valuemask, &gc_values );
+
+   /* Get atom and indicate X11 client is willing to participate */
+   wmDeleteMessage = XInternAtom ( display, "WM_DELETE_WINDOW", False );
+   XSetWMProtocols ( display, win, &wmDeleteMessage, 1 );
 
    /* load default font */
    font_info = XLoadQueryFont ( display, font_name );
@@ -474,6 +480,15 @@ int Handle_events ( void )
 
                default:
                   break;
+            }
+            break;
+
+         case ClientMessage:
+            if ( event.xclient.data.l[0] >= 0 && ((unsigned long int) \
+                 event.xclient.data.l[0]) == wmDeleteMessage )
+            {
+               Graphics_shutdown ();
+               exit(0);
             }
             break;
 
