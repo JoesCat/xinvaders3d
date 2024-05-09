@@ -5,7 +5,7 @@
 
 AC_PREREQ(2.61)
 
-m4_define([xinvaders3d_version], [1.8.0])
+m4_define([xinvaders3d_version], [1.9.0])
 AC_INIT([xinvaders3d],[xinvaders3d_version],[https://github.com/JoesCat/xinvaders3d/issues],
 	[xinvaders3d],[https://github.com/JoesCat/xinvaders3d])
 AC_CONFIG_SRCDIR([aliens.c])

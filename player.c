@@ -161,8 +161,7 @@ void Player_update1 ( OBJECT *obj )
          player1->rot = -MAX_ROT;
    }
 
-   if ( (gv->key_LEFT1 == FALSE) && (gv->key_RIGHT1 == FALSE) && \
-         player1->rot )
+   if ( player1->rot && gv->key_LEFT1 == FALSE && gv->key_RIGHT1 == FALSE )
    {
       if ( player1->rot > 0 )
       {
@@ -232,8 +231,7 @@ void Player_update2 ( OBJECT *obj )
          player2->rot = -MAX_ROT;
    }
 
-   if ( (gv->key_LEFT2 == FALSE) && (gv->key_RIGHT2 == FALSE) && \
-         player2->rot )
+   if ( player2->rot && gv->key_LEFT2 == FALSE && gv->key_RIGHT2 == FALSE )
    {
       if ( player2->rot > 0 )
       {

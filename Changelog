@@ -1,4 +1,9 @@
-xinv3d/xinvaders3d (1.8.0)
+xinvaders3d or xinv3d (1.9.0)
+  * Thanks to orchardstreet for fixing titlebar to exit cleanly
+    and also for simplifying player left/right rotation return.
+ -- Joe Da Silva <digital@joescat.com>  2024 May 09
+
+ xinvaders3d or xinv3d (1.8.0)
   * Added build option "./configure --enable-as-xinv3d" so that
     Xinvaders3D builds binary, man file, and desktop as Xinv3D.
   * Added desktop scalable icon.

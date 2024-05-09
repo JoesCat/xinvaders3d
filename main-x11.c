@@ -270,6 +270,8 @@ void Graphics_shutdown ( void )
    XAutoRepeatOn ( display );
 
    XCloseDisplay ( display );
+
+   free ( wname.value );
 }
 
 /*================================================================*/
@@ -487,8 +489,8 @@ int Handle_events ( void )
             if ( event.xclient.data.l[0] >= 0 && ((unsigned long int) \
                  event.xclient.data.l[0]) == wmDeleteMessage )
             {
-               Graphics_shutdown ();
-               exit(0);
+               /* titlebar quit! */
+               return FALSE;
             }
             break;
 
