@@ -5,11 +5,13 @@ Summary:	3D space-invaders clone on X Window System.
 License:	GPLv2+
 Group:		Games/Arcade
 Url:		https://github.com/JoesCat/xinvaders3d/
-Source0:	https://github.com/JoesCat/xinvaders3d/releases/download/%{version}/%{name}-dist-%{version}.tar.gz
-#Source0:	https://github.com/JoesCat/xinvaders3d/archive/refs/tags/%{version}.tar.gz
+Source0:	https://github.com/JoesCat/xinvaders3d/archive/%{version}/%{name}-dist-%{version}.tar.gz
+
+BuildRequires:	autoconf
+BuildRequires:	automake
+BuildRequires:	gcc
+BuildRequires:	make
 BuildRequires:	pkgconfig(x11)
-#BuildRequires: autoconf
-#BuildRequires: automake
 
 %description
 XInvaders 3D is a 3D vector-based space-invaders clone for the X Window System.
