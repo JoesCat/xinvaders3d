@@ -1,3 +1,13 @@
+xinvaders3d or xinv3d (1.37.0)
+  * No Changes made. This is just an update to get beyond the
+    unexpected confusion created between 1.31, 1.36, and 1.3.6
+    version values. Reading earlier zip files and imports like
+    Don's zip file Feb 2000 = 1.31, and HP-UX fixes 2022-03-01
+    and then Debian's later 1.3.6 fixes it appears best to get
+    beyond git tag 1.31 which might be stalling some automated
+    release watcher program.? Also chose tag to be above 1.36.
+ -- Joe Da Silva <digital@joescat.com>  2025 Sep 30
+
 xinvaders3d or xinv3d (1.9.0)
   * Thanks to orchardstreet for fixing titlebar to exit cleanly
     and also for simplifying player left/right rotation return.
