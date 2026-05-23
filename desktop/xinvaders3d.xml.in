@@ -2,8 +2,6 @@
 <mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
    <mime-type type="application/x-@make_as_xinvaders3d@">
      <comment>@make_as_xinvaders3d_fn@ scores</comment>
-     <generic-icon name="text-x-script"/>
-     <sub-class-of type="text/plain"/>
      <glob pattern="*.@make_as_xinvaders3d@"/>
    </mime-type>
 </mime-info>

@@ -1,3 +1,7 @@
+xinvaders3d or xinv3d (1.38.0)
+  * Fix some desktop bugs observed in debian testing of 1.37.0
+ -- Joe Da Silva <digital@joescat.com>  2026 May 22
+
 xinvaders3d or xinv3d (1.37.0)
   * No Changes made. This is just an update to get beyond the
     unexpected confusion created between 1.31, 1.36, and 1.3.6
